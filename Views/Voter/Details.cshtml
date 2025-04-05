@@ -1,0 +1,76 @@
+﻿@model IPLAwardManagementSystem.DTOs.VoterWithVotesDTO
+
+@{
+    ViewData["Title"] = "Voter Details";
+}
+
+<h1>Voter Details</h1>
+
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
+
+        <dt class="col-sm-2">Voter ID</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.VoterId)</dd>
+
+        <dt class="col-sm-2">Role</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Role)</dd>
+
+        <dt class="col-sm-2">Joined Date</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.JoinedDate)</dd>
+
+        <dt class="col-sm-2">Status</dt>
+        <dd class="col-sm-10">
+            @if (Model.IsVerified && Model.IsActive)
+            {
+                <span class="badge bg-success">Active & Verified</span>
+            }
+            else if (Model.IsActive)
+            {
+                <span class="badge bg-warning text-dark">Active (Not Verified)</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">Inactive</span>
+            }
+        </dd>
+    </dl>
+
+    <h5>Voting History</h5>
+    @if (Model.Votes.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Award</th>
+                    <th>Player Voted For</th>
+                    <th>Date Voted</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vote in Model.Votes)
+                {
+                    <tr>
+                        <td>@vote.Award?.Name</td>
+                        <td>@vote.Player?.Name</td>
+                        <td>@vote.VoteDate.ToString("g")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No voting history found.</p>
+    }
+</div>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

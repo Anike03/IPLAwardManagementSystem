@@ -1,21 +1,22 @@
 using IPLAwardManagementSystem.Data;
+using IPLAwardManagementSystem.Interfaces;
+using IPLAwardManagementSystem.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Register the ApplicationDbContext for Identity and application data
+// Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Configure Identity with custom options
+// Identity Configuration
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -28,10 +29,48 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Add controllers and views
-builder.Services.AddControllersWithViews();
+// Application Services
+builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IVenueService, VenueService>();
+builder.Services.AddScoped<IAwardService, AwardService>();
+builder.Services.AddScoped<IVoterService, VoterService>();
+builder.Services.AddScoped<IVoteService, VoteService>();
 
-// Configure cookie settings
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// MVC and API Configuration
+builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+
+// Swagger Configuration
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "IPL Management System API",
+        Version = "v1",
+        Description = "API for managing IPL matches, players, teams, venues, awards, voters and votes",
+        Contact = new OpenApiContact
+        {
+            Name = "Support",
+            Email = "support@iplmanagement.com"
+        }
+    });
+
+    // Include XML comments if available
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+});
+
+// Cookie Settings
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -39,37 +78,20 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-// Add Swagger services for API documentation
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "IPL Award Management System API",
-        Version = "v1",
-        Description = "API for managing IPL awards, voters, and votes",
-        Contact = new OpenApiContact
-        {
-            Name = "Support",
-            Email = "support@iplawardmanagement.com"
-        }
-    });
-});
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
     app.UseDeveloperExceptionPage();
 
-    // Enable Swagger in development
+    // Swagger UI Configuration
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "IPL Award Management API v1");
-        c.RoutePrefix = "api-docs";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "IPL Management API v1");
+        c.RoutePrefix = "swagger";
         c.ConfigObject.AdditionalItems["syntaxHighlight"] = new Dictionary<string, object>
         {
             ["activated"] = false
@@ -84,13 +106,12 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Custom middleware for handling unauthenticated users
+// Authentication Middleware
 app.Use(async (context, next) =>
 {
     var path = context.Request.Path;
@@ -108,18 +129,15 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Map controller routes
+// Endpoint Routing
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Map API controllers
 app.MapControllers();
-
-// Map Razor Pages for Identity
 app.MapRazorPages();
 
-// Seed initial data
+// Database Migration and Seeding
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -127,14 +145,13 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
-
-        // Add initial data seeding here if needed
+        // Seed initial data if needed
         // await SeedData.Initialize(services);
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+        logger.LogError(ex, "An error occurred during database migration");
     }
 }
 
