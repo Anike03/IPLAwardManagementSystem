@@ -19,7 +19,7 @@ namespace IPLAwardManagementSystem.Models
         public Venue Venue { get; set; } = null!; // Use null! to suppress null warnings
 
         // Many-to-Many Relationship: A match involves two teams
-        //public ICollection<Team> Teams { get; set; } = new List<Team>(); // Initialize to avoid null warnings
+        public ICollection<Team> Teams { get; set; } = new List<Team>(); // Initialize to avoid null warnings
     }
 }
 

@@ -11,7 +11,7 @@ namespace IPLAwardManagementSystem.Models
         public string Coach { get; set; } = string.Empty;
 
         // Navigation properties
-        //public ICollection<Player> Players { get; set; } = new List<Player>();
+        public ICollection<Player> Players { get; set; } = new List<Player>();
         public ICollection<Match> Matches { get; set; } = new List<Match>();
     }
 }

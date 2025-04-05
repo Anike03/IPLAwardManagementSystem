@@ -4,6 +4,7 @@ using IPLAwardManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IPLAwardManagementSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250405035257_Vote")]
+    partial class Vote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,34 +24,6 @@ namespace IPLAwardManagementSystem.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.Award", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Awards");
-                });
 
             modelBuilder.Entity("IPLAwardManagementSystem.Models.Match", b =>
                 {
@@ -100,27 +75,6 @@ namespace IPLAwardManagementSystem.Data.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Players");
-                });
-
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.PlayerAward", b =>
-                {
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AwardId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsWinner")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("NominationDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PlayerId", "AwardId");
-
-                    b.HasIndex("AwardId");
-
-                    b.ToTable("PlayerAwards");
                 });
 
             modelBuilder.Entity("IPLAwardManagementSystem.Models.Team", b =>
@@ -189,76 +143,24 @@ namespace IPLAwardManagementSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AwardId");
-
                     b.HasIndex("PlayerId");
-
-                    b.HasIndex("VoterId");
 
                     b.ToTable("Votes");
                 });
 
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.Voter", b =>
+            modelBuilder.Entity("MatchTeam", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("MatchesMatchId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("JoinedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("VoterId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("VoterId")
-                        .IsUnique();
-
-                    b.ToTable("Voters");
-                });
-
-            modelBuilder.Entity("MatchTeams", b =>
-                {
-                    b.Property<int>("MatchId")
+                    b.Property<int>("TeamsTeamId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
+                    b.HasKey("MatchesMatchId", "TeamsTeamId");
 
-                    b.HasKey("MatchId", "TeamId");
+                    b.HasIndex("TeamsTeamId");
 
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("MatchTeams");
+                    b.ToTable("MatchTeam");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -485,63 +387,28 @@ namespace IPLAwardManagementSystem.Data.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.PlayerAward", b =>
-                {
-                    b.HasOne("IPLAwardManagementSystem.Models.Award", "Award")
-                        .WithMany("PlayerAwards")
-                        .HasForeignKey("AwardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IPLAwardManagementSystem.Models.Player", "Player")
-                        .WithMany("PlayerAwards")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Award");
-
-                    b.Navigation("Player");
-                });
-
             modelBuilder.Entity("IPLAwardManagementSystem.Models.Vote", b =>
                 {
-                    b.HasOne("IPLAwardManagementSystem.Models.Award", "Award")
-                        .WithMany("Votes")
-                        .HasForeignKey("AwardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("IPLAwardManagementSystem.Models.Player", "Player")
                         .WithMany()
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IPLAwardManagementSystem.Models.Voter", "Voter")
-                        .WithMany("Votes")
-                        .HasForeignKey("VoterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Award");
-
                     b.Navigation("Player");
-
-                    b.Navigation("Voter");
                 });
 
-            modelBuilder.Entity("MatchTeams", b =>
+            modelBuilder.Entity("MatchTeam", b =>
                 {
                     b.HasOne("IPLAwardManagementSystem.Models.Match", null)
                         .WithMany()
-                        .HasForeignKey("MatchId")
+                        .HasForeignKey("MatchesMatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("IPLAwardManagementSystem.Models.Team", null)
                         .WithMany()
-                        .HasForeignKey("TeamId")
+                        .HasForeignKey("TeamsTeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -597,18 +464,6 @@ namespace IPLAwardManagementSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.Award", b =>
-                {
-                    b.Navigation("PlayerAwards");
-
-                    b.Navigation("Votes");
-                });
-
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.Player", b =>
-                {
-                    b.Navigation("PlayerAwards");
-                });
-
             modelBuilder.Entity("IPLAwardManagementSystem.Models.Team", b =>
                 {
                     b.Navigation("Players");
@@ -617,11 +472,6 @@ namespace IPLAwardManagementSystem.Data.Migrations
             modelBuilder.Entity("IPLAwardManagementSystem.Models.Venue", b =>
                 {
                     b.Navigation("Matches");
-                });
-
-            modelBuilder.Entity("IPLAwardManagementSystem.Models.Voter", b =>
-                {
-                    b.Navigation("Votes");
                 });
 #pragma warning restore 612, 618
         }
