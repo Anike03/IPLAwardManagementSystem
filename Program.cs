@@ -37,6 +37,7 @@ builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddScoped<IAwardService, AwardService>();
 builder.Services.AddScoped<IVoterService, VoterService>();
 builder.Services.AddScoped<IVoteService, VoteService>();
+builder.Services.AddScoped<IPlayerAwardService, PlayerAwardService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
