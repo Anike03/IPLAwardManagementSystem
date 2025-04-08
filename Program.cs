@@ -1,5 +1,6 @@
 using IPLAwardManagementSystem.Data;
 using IPLAwardManagementSystem.Interfaces;
+using IPLAwardManagementSystem.Mappings;
 using IPLAwardManagementSystem.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,18 +30,18 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Application Services
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Register services
+builder.Services.AddScoped<IAwardService, AwardService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IVenueService, VenueService>();
-builder.Services.AddScoped<IAwardService, AwardService>();
 builder.Services.AddScoped<IVoterService, VoterService>();
 builder.Services.AddScoped<IVoteService, VoteService>();
 builder.Services.AddScoped<IPlayerAwardService, PlayerAwardService>();
-
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
 
 // MVC and API Configuration
 builder.Services.AddControllersWithViews();

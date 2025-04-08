@@ -15,10 +15,8 @@ namespace IPLAwardManagementSystem.DTOs
         public int PlayerId { get; set; }
         public int VoterId { get; set; }
         public DateTime VoteDate { get; set; }
-
-        // Optional: Include related data if needed
-        public string? AwardName { get; set; }
-        public string? PlayerName { get; set; }
-        public string? VoterName { get; set; }
+        public AwardDto? Award { get; set; }
+        public PlayerDto? Player { get; set; }
+        public VoterDto? Voter { get; set; }
     }
 }

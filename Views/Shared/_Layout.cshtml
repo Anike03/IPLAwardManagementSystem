@@ -1,4 +1,4 @@
-﻿﻿@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 
 <!DOCTYPE html>
@@ -6,123 +6,274 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - IPL Management System</title>
+    <title>@ViewData["Title"] - IPL Award Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" />
 
     <style>
         :root {
             --ipl-blue: #0d1a3f;
             --ipl-gold: #fdb927;
             --ipl-white: #ffffff;
+            --ipl-light-blue: #1a3a8f;
+            --ipl-dark: #040d21;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
         }
 
         .ipl-header {
-            background-color: var(--ipl-blue);
+            background: linear-gradient(135deg, var(--ipl-blue) 0%, var(--ipl-dark) 100%);
             color: var(--ipl-white);
-            padding: 15px;
+            padding: 15px 0;
             text-align: center;
             font-size: 2rem;
-            font-weight: bold;
+            font-weight: 700;
             text-transform: uppercase;
-            font-family: 'Poppins', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
         }
 
         .ipl-logo {
             height: 50px;
+            margin-right: 15px;
+            vertical-align: middle;
         }
 
         .navbar-custom {
             background-color: var(--ipl-blue) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 0;
         }
 
         .navbar-nav .nav-item {
-            margin: 0 10px;
+            margin: 0 5px;
+            position: relative;
         }
 
         .navbar-nav .nav-link {
             color: var(--ipl-white) !important;
             font-weight: 500;
-            font-size: 1.1rem;
+            font-size: 1rem;
             padding: 10px 15px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            border-radius: 4px;
         }
 
-        .navbar-nav .nav-link:hover {
-            color: var(--ipl-gold) !important;
+            .navbar-nav .nav-link:hover,
+            .navbar-nav .nav-link.active {
+                color: var(--ipl-gold) !important;
+                background-color: rgba(253, 185, 39, 0.1);
+            }
+
+            .navbar-nav .nav-link i {
+                margin-right: 8px;
+                font-size: 1.1rem;
+            }
+
+        /* Dropdown menu styling */
+        .dropdown-menu {
+            background-color: var(--ipl-blue);
+            border: none;
+            border-radius: 0 0 8px 8px;
+            margin-top: 0;
         }
 
-        /* Adjusting Login/Register buttons */
+        .dropdown-item {
+            color: var(--ipl-white);
+            padding: 8px 20px;
+        }
+
+            .dropdown-item:hover {
+                background-color: var(--ipl-light-blue);
+                color: var(--ipl-gold);
+            }
+
+        /* Auth buttons styling */
         .auth-buttons .btn {
             color: var(--ipl-white) !important;
-            background-color: var(--ipl-blue) !important;
+            background-color: transparent;
+            border: 1px solid var(--ipl-gold);
             font-weight: 500;
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 20px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            margin-left: 10px;
         }
 
-        .auth-buttons .btn:hover {
-            background-color: var(--ipl-gold) !important;
-            color: var(--ipl-blue) !important;
+            .auth-buttons .btn:hover {
+                background-color: var(--ipl-gold) !important;
+                color: var(--ipl-blue) !important;
+            }
+
+        .auth-buttons .btn-outline-light {
+            border-color: var(--ipl-white);
         }
 
-        /* Footer */
+        /* Main content area */
+        .main-content {
+            min-height: calc(100vh - 180px);
+            padding: 30px 0;
+        }
+
+        /* Footer styling */
         .footer {
-            background-color: var(--ipl-blue);
+            background: linear-gradient(135deg, var(--ipl-blue) 0%, var(--ipl-dark) 100%);
             color: var(--ipl-white);
             text-align: center;
-            padding: 15px;
-            font-size: 1rem;
+            padding: 20px 0;
+            font-size: 0.9rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+            .footer a {
+                color: var(--ipl-gold);
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .footer a:hover {
+                    color: var(--ipl-white);
+                    text-decoration: underline;
+                }
+
+        /* Responsive adjustments */
+        @@media (max-width: 992px) {
+            .navbar-nav {
+                padding: 10px 0;
+            }
+
+            .auth-buttons {
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+
+            .ipl-header {
+                font-size: 1.5rem;
+            }
+
+            .ipl-logo {
+                height: 40px;
+            }
+        }
+
+        /* Notification badge */
+        .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.6rem;
+            background-color: var(--ipl-gold);
+            color: var(--ipl-blue);
+        }
+
+        /* Active link indicator */
+        .nav-item.active .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            right: 15px;
+            height: 3px;
+            background-color: var(--ipl-gold);
         }
     </style>
 </head>
 <body>
-
     <!-- IPL Styled Header -->
-    <div class="ipl-header">
+    <header class="ipl-header">
         <img src="https://www.iplt20.com/assets/images/ipl-logo-new-old.png" alt="IPL Logo" class="ipl-logo">
-        IPL Management System
-    </div>
+        IPL Award Management System
+    </header>
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i>Home
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                       
+
+                    <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Privacy" ? "active" : "")">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <i class="fas fa-shield-alt"></i>Privacy
+                        </a>
+                    </li>
+
+                        <li class="nav-item dropdown @(new[] {"Player", "Team", "Venue", "Match"}.Contains(ViewContext.RouteData.Values["Controller"].ToString()) ? "active" : "")">
+                            <a class="nav-link dropdown-toggle" href="#" id="teamsDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-users"></i>Teams & Players
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="teamsDropdown">
+                                <li><a class="dropdown-item" asp-controller="Team" asp-action="Index"><i class="fas fa-tshirt"></i> Teams</a></li>
+                                <li><a class="dropdown-item" asp-controller="Player" asp-action="Index"><i class="fas fa-user"></i> Players</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Venue" asp-action="Index"><i class="fas fa-map-marker-alt"></i> Venues</a></li>
+                                <li><a class="dropdown-item" asp-controller="Match" asp-action="Index"><i class="fas fa-calendar-alt"></i> Matches</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Venue" asp-action="Index">Venues</a>
+
+                        <li class="nav-item dropdown @(new[] {"Award", "PlayerAward"}.Contains(ViewContext.RouteData.Values["Controller"].ToString()) ? "active" : "")">
+                            <a class="nav-link dropdown-toggle" href="#" id="awardsDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-trophy"></i>Awards
+                                <span class="badge badge-notification">New</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="awardsDropdown">
+                                <li><a class="dropdown-item" asp-controller="Award" asp-action="Index"><i class="fas fa-award"></i> All Awards</a></li>
+                                <li><a class="dropdown-item" asp-controller="PlayerAward" asp-action="Index"><i class="fas fa-star"></i> Nominations</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="PlayerAward" asp-action="Winners"><i class="fas fa-medal"></i> Winners</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+
+                        <li class="nav-item dropdown @(new[] {"Voter", "Vote"}.Contains(ViewContext.RouteData.Values["Controller"].ToString()) ? "active" : "")">
+                            <a class="nav-link dropdown-toggle" href="#" id="votingDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-vote-yea"></i>Voting
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="votingDropdown">
+                                <li><a class="dropdown-item" asp-controller="Voter" asp-action="Index"><i class="fas fa-users"></i> Voters</a></li>
+                                <li><a class="dropdown-item" asp-controller="Vote" asp-action="Index"><i class="fas fa-poll"></i> Votes</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Vote" asp-action="Results"><i class="fas fa-chart-bar"></i> Results</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Match" asp-action="Index">Matches</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Player" asp-action="Index">Players</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Voter" asp-action="Index">Voters</a>
-                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" ? "active" : "")">
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">
+                                    <i class="fas fa-cog"></i>Admin
+                                </a>
+                            </li>
+                        }
                     }
                 </ul>
 
-                <!-- Login/Register or Logout button (aligned to top-right) -->
+                <!-- Login/Register or Logout button -->
                 <div class="auth-buttons ms-auto">
                     <partial name="_LoginPartial" />
                 </div>
@@ -131,7 +282,7 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container mt-4">
+    <div class="container main-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -139,14 +290,49 @@
 
     <!-- Footer -->
     <footer class="footer">
-        &copy; 2025 - IPL Management System - <a asp-controller="Home" asp-action="Privacy" class="text-white">Privacy</a>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-md-start">
+                    &copy; 2025 - IPL Award Management System
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a asp-controller="Home" asp-action="Privacy">Privacy Policy</a> |
+                    <a asp-controller="Home" asp-action="Terms">Terms of Service</a> |
+                    <a asp-controller="Home" asp-action="Contact">Contact Us</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 
+    <!-- Notification script -->
+    <script>
+        $(document).ready(function() {
+            // Display toast notifications
+        @if (TempData["Success"] != null)
+        {
+            <text>toastr.success('@TempData["Success"]');</text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <text>toastr.error('@TempData["Error"]');</text>
+        }
+        @if (TempData["Warning"] != null)
+        {
+            <text>toastr.warning('@TempData["Warning"]');</text>
+        }
+        @if (TempData["Info"] != null)
+        {
+            <text>toastr.info('@TempData["Info"]');</text>
+        }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

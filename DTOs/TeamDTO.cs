@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿// DTOs/TeamDTOs.cs
 namespace IPLAwardManagementSystem.DTOs
 {
-    public class TeamDTO
+    public class TeamCreateDto
+    {
+        public string TeamName { get; set; }
+        public string Coach { get; set; }
+    }
+
+    public class TeamUpdateDto
+    {
+        public string TeamName { get; set; }
+        public string Coach { get; set; }
+    }
+
+    public class TeamDto
     {
         public int TeamId { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Coach { get; set; } = string.Empty;
+        public string TeamName { get; set; }
+        public string Coach { get; set; }
+        public List<PlayerDto> Players { get; set; }
     }
 }

@@ -1,16 +1,15 @@
-﻿using IPLAwardManagementSystem.DTOs;
-using IPLAwardManagementSystem.Models;
-using System.Collections.Generic;
+﻿// Interfaces/IVenueService.cs
+using IPLAwardManagementSystem.DTOs;
 
 namespace IPLAwardManagementSystem.Interfaces
 {
     public interface IVenueService
     {
-        IEnumerable<Venue> AllVenues { get; }
-
-        Venue? GetVenueById(int id); // Add nullable return type
-        void CreateVenue(VenueDTO venueDTO);
-        void UpdateVenue(int id, VenueDTO venueDTO);
-        void DeleteVenue(int id);
+        Task<VenueDto> CreateVenueAsync(VenueCreateDto venueCreateDto);
+        Task<IEnumerable<VenueDto>> GetAllVenuesAsync();
+        Task<VenueDto> GetVenueByIdAsync(int id);
+        Task UpdateVenueAsync(int id, VenueUpdateDto venueUpdateDto);
+        Task DeleteVenueAsync(int id);
+        Task<IEnumerable<MatchDto>> GetMatchesAtVenueAsync(int venueId);
     }
 }

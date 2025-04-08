@@ -1,73 +1,103 @@
 ﻿using IPLAwardManagementSystem.Data;
+using AutoMapper;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Interfaces;
 using IPLAwardManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace IPLAwardManagementSystem.Services
 {
     public class MatchService : IMatchService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MatchService(ApplicationDbContext context)
+        public MatchService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Match> GetAllMatches()
+        public async Task<MatchDto> CreateMatchAsync(MatchCreateDto matchCreateDto)
         {
-            return _context.Matches
-                .Include(m => m.Venue)
-                .Include(m => m.Teams)
-                .ToList();
-        }
+            var match = _mapper.Map<Match>(matchCreateDto);
 
-        public Match? GetMatchById(int id)
-        {
-            return _context.Matches
-                .Include(m => m.Venue)
-                .Include(m => m.Teams)
-                .FirstOrDefault(m => m.MatchId == id);
-        }
+            var teams = await _context.Teams
+                .Where(t => matchCreateDto.TeamIds.Contains(t.TeamId))
+                .ToListAsync();
 
-        public void CreateMatch(MatchDTO matchDTO)
-        {
-            var match = new Match
+            foreach (var team in teams)
             {
-                MatchDate = matchDTO.MatchDate,
-                VenueId = matchDTO.VenueId,
-                Teams = _context.Teams.Where(t => matchDTO.TeamIds.Contains(t.TeamId)).ToList()
-            };
+                match.Teams.Add(team);
+            }
 
             _context.Matches.Add(match);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            return _mapper.Map<MatchDto>(match);
         }
 
-        public void UpdateMatch(int id, MatchDTO matchDTO)
+        public async Task<IEnumerable<MatchDto>> GetAllMatchesAsync()
         {
-            var match = _context.Matches
+            var matches = await _context.Matches
+                .Include(m => m.Venue)
                 .Include(m => m.Teams)
-                .FirstOrDefault(m => m.MatchId == id) ?? throw new KeyNotFoundException("Match not found");
+                .ToListAsync();
 
-            match.MatchDate = matchDTO.MatchDate;
-            match.VenueId = matchDTO.VenueId;
-            match.Teams = _context.Teams.Where(t => matchDTO.TeamIds.Contains(t.TeamId)).ToList();
-
-            _context.Matches.Update(match);
-            _context.SaveChanges();
+            return _mapper.Map<IEnumerable<MatchDto>>(matches);
         }
 
-        public void DeleteMatch(int id)
+        public async Task<MatchDto> GetMatchByIdAsync(int id)
         {
-            var match = _context.Matches.Find(id);
-            if (match == null)
-                throw new KeyNotFoundException("Match not found");
+            var match = await _context.Matches
+                .Include(m => m.Venue)
+                .Include(m => m.Teams)
+                .FirstOrDefaultAsync(m => m.MatchId == id);
+
+            if (match == null) throw new KeyNotFoundException("Match not found");
+            return _mapper.Map<MatchDto>(match);
+        }
+
+        public async Task UpdateMatchAsync(int id, MatchUpdateDto matchUpdateDto)
+        {
+            var match = await _context.Matches
+                .Include(m => m.Teams)
+                .FirstOrDefaultAsync(m => m.MatchId == id);
+
+            if (match == null) throw new KeyNotFoundException("Match not found");
+
+            _mapper.Map(matchUpdateDto, match);
+
+            // Update teams
+            match.Teams.Clear();
+            var teams = await _context.Teams
+                .Where(t => matchUpdateDto.TeamIds.Contains(t.TeamId))
+                .ToListAsync();
+
+            foreach (var team in teams)
+            {
+                match.Teams.Add(team);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteMatchAsync(int id)
+        {
+            var match = await _context.Matches.FindAsync(id);
+            if (match == null) throw new KeyNotFoundException("Match not found");
 
             _context.Matches.Remove(match);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<MatchDto>> GetMatchesByDateRangeAsync(DateTime startDate, DateTime endDate)
+        {
+            var matches = await _context.Matches
+                .Where(m => m.MatchDate >= startDate && m.MatchDate <= endDate)
+                .Include(m => m.Venue)
+                .Include(m => m.Teams)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<MatchDto>>(matches);
         }
     }
 }

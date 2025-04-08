@@ -1,15 +1,15 @@
-﻿using IPLAwardManagementSystem.DTOs;
-using IPLAwardManagementSystem.Models;
-using System.Collections.Generic;
+﻿// Interfaces/IMatchService.cs
+using IPLAwardManagementSystem.DTOs;
 
 namespace IPLAwardManagementSystem.Interfaces
 {
     public interface IMatchService
     {
-        IEnumerable<Match> GetAllMatches();
-        Match? GetMatchById(int id);
-        void CreateMatch(MatchDTO matchDTO);
-        void UpdateMatch(int id, MatchDTO matchDTO);
-        void DeleteMatch(int id);
+        Task<MatchDto> CreateMatchAsync(MatchCreateDto matchCreateDto);
+        Task<IEnumerable<MatchDto>> GetAllMatchesAsync();
+        Task<MatchDto> GetMatchByIdAsync(int id);
+        Task UpdateMatchAsync(int id, MatchUpdateDto matchUpdateDto);
+        Task DeleteMatchAsync(int id);
+        Task<IEnumerable<MatchDto>> GetMatchesByDateRangeAsync(DateTime startDate, DateTime endDate);
     }
 }

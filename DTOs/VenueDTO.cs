@@ -1,9 +1,22 @@
-﻿namespace IPLAwardManagementSystem.DTOs
+﻿// DTOs/VenueDTOs.cs
+namespace IPLAwardManagementSystem.DTOs
 {
-    public class VenueDTO
+    public class VenueCreateDto
+    {
+        public string Name { get; set; }
+        public string Location { get; set; }
+    }
+
+    public class VenueUpdateDto
+    {
+        public string Name { get; set; }
+        public string Location { get; set; }
+    }
+
+    public class VenueDto
     {
         public int VenueId { get; set; }
-        public string VenueName { get; set; } = string.Empty;
-        public string Location { get; set; } = string.Empty;
+        public string Name { get; set; }
+        public string Location { get; set; }
     }
 }

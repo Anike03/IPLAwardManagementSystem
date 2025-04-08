@@ -5,12 +5,11 @@ namespace IPLAwardManagementSystem.Interfaces
 {
     public interface IVoteService
     {
-        Task<VoteDto> CastVoteAsync(VoteCreateDto voteCreateDto);
+        Task<VoteDto> CreateVoteAsync(VoteCreateDto voteCreateDto);
         Task<IEnumerable<VoteDto>> GetAllVotesAsync();
         Task<VoteDto> GetVoteByIdAsync(int id);
-        Task<IEnumerable<VoteDto>> GetVotesByAwardAsync(int awardId);
-        Task<IEnumerable<VoteDto>> GetVotesByPlayerAsync(int playerId);
-        Task<IEnumerable<VoteDto>> GetVotesByVoterAsync(int voterId);
         Task DeleteVoteAsync(int id);
+        Task<IEnumerable<VoteDto>> GetVotesForAwardAsync(int awardId);
+        Task<IEnumerable<VoteDto>> GetVotesForPlayerAsync(int playerId);
     }
 }

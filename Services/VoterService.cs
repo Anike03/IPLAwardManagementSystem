@@ -1,137 +1,80 @@
-﻿// Services/VoterService.cs
-using IPLAwardManagementSystem.Models;
+﻿using AutoMapper;
+using IPLAwardManagementSystem.Data;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Interfaces;
+using IPLAwardManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using IPLAwardManagementSystem.Data;
 
 namespace IPLAwardManagementSystem.Services
 {
     public class VoterService : IVoterService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public VoterService(ApplicationDbContext context)
+        public VoterService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<VoterDto> CreateVoterAsync(VoterCreateDto voterCreateDto)
         {
-            var voter = new Voter
-            {
-                Name = voterCreateDto.Name,
-                Email = voterCreateDto.Email,
-                VoterId = voterCreateDto.VoterId ?? Guid.NewGuid().ToString(),
-                Role = voterCreateDto.Role,
-                JoinedDate = DateTime.UtcNow,
-                IsVerified = false,
-                IsActive = true
-            };
-
+            var voter = _mapper.Map<Voter>(voterCreateDto);
             _context.Voters.Add(voter);
             await _context.SaveChangesAsync();
-
-            return MapToVoterDto(voter);
+            return _mapper.Map<VoterDto>(voter);
         }
 
-        public async Task<IEnumerable<VoterDto>> GetAllVotersAsync(bool? isActive = null)
+        public async Task<IEnumerable<VoterDto>> GetAllVotersAsync()
         {
-            IQueryable<Voter> query = _context.Voters;
-
-            if (isActive.HasValue)
-            {
-                query = query.Where(v => v.IsActive == isActive.Value);
-            }
-
-            var voters = await query.ToListAsync();
-            return voters.Select(MapToVoterDto);
+            var voters = await _context.Voters.ToListAsync();
+            return _mapper.Map<IEnumerable<VoterDto>>(voters);
         }
 
         public async Task<VoterDto> GetVoterByIdAsync(int id)
         {
             var voter = await _context.Voters.FindAsync(id);
-            if (voter == null) return null;
-
-            return MapToVoterDto(voter);
+            if (voter == null) throw new KeyNotFoundException("Voter not found");
+            return _mapper.Map<VoterDto>(voter);
         }
 
         public async Task UpdateVoterAsync(int id, VoterUpdateDto voterUpdateDto)
         {
             var voter = await _context.Voters.FindAsync(id);
-            if (voter == null) throw new Exception("Voter not found");
+            if (voter == null) throw new KeyNotFoundException("Voter not found");
 
-            if (!string.IsNullOrEmpty(voterUpdateDto.Name))
-            {
-                voter.Name = voterUpdateDto.Name;
-            }
-
-            if (!string.IsNullOrEmpty(voterUpdateDto.Email))
-            {
-                voter.Email = voterUpdateDto.Email;
-            }
-
-            if (!string.IsNullOrEmpty(voterUpdateDto.Role))
-            {
-                voter.Role = voterUpdateDto.Role;
-            }
-
-            if (voterUpdateDto.IsVerified.HasValue)
-            {
-                voter.IsVerified = voterUpdateDto.IsVerified.Value;
-            }
-
-            if (voterUpdateDto.IsActive.HasValue)
-            {
-                voter.IsActive = voterUpdateDto.IsActive.Value;
-            }
-
+            _mapper.Map(voterUpdateDto, voter);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteVoterAsync(int id)
         {
             var voter = await _context.Voters.FindAsync(id);
-            if (voter == null) throw new Exception("Voter not found");
+            if (voter == null) throw new KeyNotFoundException("Voter not found");
 
             _context.Voters.Remove(voter);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task ToggleVoterStatusAsync(int id)
-        {
-            var voter = await _context.Voters.FindAsync(id);
-            if (voter == null) throw new Exception("Voter not found");
-
-            voter.IsActive = !voter.IsActive;
             await _context.SaveChangesAsync();
         }
 
         public async Task VerifyVoterAsync(int id)
         {
             var voter = await _context.Voters.FindAsync(id);
-            if (voter == null) throw new Exception("Voter not found");
+            if (voter == null) throw new KeyNotFoundException("Voter not found");
 
             voter.IsVerified = true;
             await _context.SaveChangesAsync();
         }
 
-        private static VoterDto MapToVoterDto(Voter voter)
+        public async Task<IEnumerable<VoteDto>> GetVotesByVoterAsync(int voterId)
         {
-            return new VoterDto
-            {
-                Id = voter.Id,
-                Name = voter.Name,
-                Email = voter.Email,
-                VoterId = voter.VoterId,
-                Role = voter.Role,
-                JoinedDate = voter.JoinedDate,
-                IsVerified = voter.IsVerified,
-                IsActive = voter.IsActive
-            };
+            var votes = await _context.Votes
+                .Where(v => v.VoterId == voterId)
+                .Include(v => v.Award)
+                .Include(v => v.Player)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<VoteDto>>(votes);
         }
     }
 }

@@ -5,12 +5,12 @@ namespace IPLAwardManagementSystem.DTOs
     {
         public int PlayerId { get; set; }
         public int AwardId { get; set; }
-        public bool IsWinner { get; set; } = false;
+        public bool IsWinner { get; set; }
     }
 
     public class PlayerAwardUpdateDto
     {
-        public bool? IsWinner { get; set; }
+        public bool IsWinner { get; set; }
     }
 
     public class PlayerAwardDto
@@ -19,9 +19,7 @@ namespace IPLAwardManagementSystem.DTOs
         public int AwardId { get; set; }
         public bool IsWinner { get; set; }
         public DateTime NominationDate { get; set; }
-
-        // Optional: Include related data if needed
-        public string? PlayerName { get; set; }
-        public string? AwardName { get; set; }
+        public PlayerDto? Player { get; set; }
+        public AwardDto? Award { get; set; }
     }
 }

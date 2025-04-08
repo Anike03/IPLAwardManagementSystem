@@ -1,16 +1,15 @@
-﻿using IPLAwardManagementSystem.DTOs;
-using IPLAwardManagementSystem.Models;
-using System.Collections.Generic;
+﻿// Interfaces/ITeamService.cs
+using IPLAwardManagementSystem.DTOs;
 
 namespace IPLAwardManagementSystem.Interfaces
 {
     public interface ITeamService
     {
-        IEnumerable<Team> AllTeams { get; }
-
-        Team? GetTeamById(int id); // Add nullable return type
-        void CreateTeam(TeamDTO teamDTO);
-        void UpdateTeam(int id, TeamDTO teamDTO);
-        void DeleteTeam(int id);
+        Task<TeamDto> CreateTeamAsync(TeamCreateDto teamCreateDto);
+        Task<IEnumerable<TeamDto>> GetAllTeamsAsync();
+        Task<TeamDto> GetTeamByIdAsync(int id);
+        Task UpdateTeamAsync(int id, TeamUpdateDto teamUpdateDto);
+        Task DeleteTeamAsync(int id);
+        Task<IEnumerable<PlayerDto>> GetTeamPlayersAsync(int teamId);
     }
 }

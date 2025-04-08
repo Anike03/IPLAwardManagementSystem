@@ -1,38 +1,30 @@
 ﻿// Services/AwardService.cs
-using IPLAwardManagementSystem.Models;
+using AutoMapper;
+using IPLAwardManagementSystem.Data;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Interfaces;
+using IPLAwardManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using IPLAwardManagementSystem.Data;
 
 namespace IPLAwardManagementSystem.Services
 {
     public class AwardService : IAwardService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AwardService(ApplicationDbContext context)
+        public AwardService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<AwardDto> CreateAwardAsync(AwardCreateDto awardCreateDto)
         {
-            var award = new Award
-            {
-                Name = awardCreateDto.Name,
-                Description = awardCreateDto.Description,
-                CreatedDate = DateTime.UtcNow,
-                IsActive = true
-            };
-
+            var award = _mapper.Map<Award>(awardCreateDto);
             _context.Awards.Add(award);
             await _context.SaveChangesAsync();
-
-            return MapToAwardDto(award);
+            return _mapper.Map<AwardDto>(award);
         }
 
         public async Task<IEnumerable<AwardDto>> GetAllAwardsAsync(bool? isActive = null)
@@ -45,44 +37,29 @@ namespace IPLAwardManagementSystem.Services
             }
 
             var awards = await query.ToListAsync();
-            return awards.Select(MapToAwardDto);
+            return _mapper.Map<IEnumerable<AwardDto>>(awards);
         }
 
         public async Task<AwardDto> GetAwardByIdAsync(int id)
         {
             var award = await _context.Awards.FindAsync(id);
-            if (award == null) return null;
-
-            return MapToAwardDto(award);
+            if (award == null) throw new KeyNotFoundException("Award not found");
+            return _mapper.Map<AwardDto>(award);
         }
 
         public async Task UpdateAwardAsync(int id, AwardUpdateDto awardUpdateDto)
         {
             var award = await _context.Awards.FindAsync(id);
-            if (award == null) throw new Exception("Award not found");
+            if (award == null) throw new KeyNotFoundException("Award not found");
 
-            if (!string.IsNullOrEmpty(awardUpdateDto.Name))
-            {
-                award.Name = awardUpdateDto.Name;
-            }
-
-            if (awardUpdateDto.Description != null)
-            {
-                award.Description = awardUpdateDto.Description;
-            }
-
-            if (awardUpdateDto.IsActive.HasValue)
-            {
-                award.IsActive = awardUpdateDto.IsActive.Value;
-            }
-
+            _mapper.Map(awardUpdateDto, award);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAwardAsync(int id)
         {
             var award = await _context.Awards.FindAsync(id);
-            if (award == null) throw new Exception("Award not found");
+            if (award == null) throw new KeyNotFoundException("Award not found");
 
             _context.Awards.Remove(award);
             await _context.SaveChangesAsync();
@@ -91,22 +68,22 @@ namespace IPLAwardManagementSystem.Services
         public async Task ToggleAwardStatusAsync(int id)
         {
             var award = await _context.Awards.FindAsync(id);
-            if (award == null) throw new Exception("Award not found");
+            if (award == null) throw new KeyNotFoundException("Award not found");
 
             award.IsActive = !award.IsActive;
             await _context.SaveChangesAsync();
         }
 
-        private static AwardDto MapToAwardDto(Award award)
+        public async Task<IEnumerable<PlayerDto>> GetPlayersForAwardAsync(int awardId)
         {
-            return new AwardDto
-            {
-                Id = award.Id,
-                Name = award.Name,
-                Description = award.Description,
-                CreatedDate = award.CreatedDate,
-                IsActive = award.IsActive
-            };
+            var players = await _context.PlayerAwards
+                .Where(pa => pa.AwardId == awardId)
+                .Include(pa => pa.Player)
+                .ThenInclude(p => p.Team)
+                .Select(pa => pa.Player)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<PlayerDto>>(players);
         }
     }
 }
