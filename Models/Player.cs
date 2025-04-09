@@ -27,7 +27,7 @@ namespace IPLAwardManagementSystem.Models
         // One-to-Many Relationship: A player belongs to one team
         public Team Team { get; set; } = null!;
 
-        // Navigation property for PlayerAwards (added to fix the error)
+        // Navigation property for PlayerAwards
         public ICollection<PlayerAward> PlayerAwards { get; set; } = new List<PlayerAward>();
     }
 }

@@ -1,0 +1,38 @@
+@model IEnumerable<IPLAwardManagementSystem.Models.Player>
+@{
+    ViewData["Title"] = "Players";
+}
+
+<h1>Player List</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New Player</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Role</th>
+            <th>Team</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var player in Model)
+    {
+        <tr>
+            <td>@player.Name</td>
+            <td>@player.Age</td>
+            <td>@player.Role</td>
+            <td>@player.Team</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@player.PlayerId">Details</a> |
+                <a asp-action="Edit" asp-route-id="@player.PlayerId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@player.PlayerId">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

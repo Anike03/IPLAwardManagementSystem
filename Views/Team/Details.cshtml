@@ -1,0 +1,22 @@
+@model IPLAwardManagementSystem.Models.Team
+
+@{
+    ViewData["Title"] = "Team Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Team</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Team Name</dt>
+        <dd class="col-sm-10">@Model.TeamName</dd>
+
+        <dt class="col-sm-2">Coach</dt>
+        <dd class="col-sm-10">@Model.Coach</dd>
+    </dl>
+</div>
+
+<a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.TeamId">Edit</a> |
+<a asp-action="Index">Back to List</a>
