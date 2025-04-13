@@ -1,30 +1,25 @@
-@model IPLAwardManagementSystem.DTOs.VoteCreateDto
+@model IPLAwardManagementSystem.DTOs.VoteUpdateDto
 @{
-    ViewData["Title"] = "Cast New Vote";
+    ViewData["Title"] = "Edit Vote";
 }
 
-<h2>Cast New Vote</h2>
+<h2>Edit Vote</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
     <div class="form-group mb-3">
         <label asp-for="PlayerId"></label>
-        <select asp-for="PlayerId" asp-items="ViewBag.Players" class="form-control">
-            <option value="">-- Select Team --</option>
-        </select>
+        <select asp-for="PlayerId" asp-items="ViewBag.Players" class="form-control"></select>
         <span asp-validation-for="PlayerId" class="text-danger"></span>
     </div>
     <div class="form-group mb-3">
         <label asp-for="AwardId"></label>
-        <select asp-for="AwardId" asp-items="ViewBag.Awards" class="form-control">
-            <option value="">-- Select Team --</option>
-        </select>
+        <select asp-for="AwardId" asp-items="ViewBag.Awards" class="form-control"></select>
         <span asp-validation-for="AwardId" class="text-danger"></span>
     </div>
     <div class="form-group mb-3">
         <label asp-for="VoterId"></label>
-        <select asp-for="VoterId" asp-items="ViewBag.Voters" class="form-control">
-            <option value="">-- Select Team --</option>
-        </select>
+        <select asp-for="VoterId" asp-items="ViewBag.Voters" class="form-control"></select>
         <span asp-validation-for="VoterId" class="text-danger"></span>
     </div>
     <div class="form-group mb-3">
@@ -32,5 +27,5 @@
         <input asp-for="VoteDate" class="form-control" type="datetime-local" />
         <span asp-validation-for="VoteDate" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-success">Submit Vote</button>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>

@@ -6,7 +6,7 @@ namespace IPLAwardManagementSystem.Models
     public class Award
     {
         [Key]
-        public int Id { get; set; }
+        public int AwardId { get; set; }
 
         [Required]
         [StringLength(100)]

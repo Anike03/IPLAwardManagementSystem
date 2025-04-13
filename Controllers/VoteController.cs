@@ -1,21 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using IPLAwardManagementSystem.Data;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IPLAwardManagementSystem.Controllers
 {
     public class VoteController : Controller
     {
         private readonly IVoteService _voteService;
-        private readonly ApplicationDbContext _context;
+        private readonly IPlayerService _playerService;
+        private readonly IAwardService _awardService;
+        private readonly IVoterService _voterService;
 
-        public VoteController(IVoteService voteService, ApplicationDbContext context)
+        public VoteController(
+            IVoteService voteService,
+            IPlayerService playerService,
+            IAwardService awardService,
+            IVoterService voterService)
         {
             _voteService = voteService;
-            _context = context;
+            _playerService = playerService;
+            _awardService = awardService;
+            _voterService = voterService;
         }
 
         public async Task<IActionResult> Index()
@@ -33,7 +39,7 @@ namespace IPLAwardManagementSystem.Controllers
 
         public async Task<IActionResult> Create()
         {
-            await LoadDropdownsAsync();
+            await LoadDropdownData();
             return View();
         }
 
@@ -47,18 +53,13 @@ namespace IPLAwardManagementSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await LoadDropdownsAsync();
+            await LoadDropdownData();
             return View(dto);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var vote = await _context.Votes
-                .Include(v => v.Player)
-                .Include(v => v.Award)
-                .Include(v => v.Voter)
-                .FirstOrDefaultAsync(v => v.Id == id);
-
+            var vote = await _voteService.GetVoteByIdAsync(id);
             if (vote == null) return NotFound();
 
             var dto = new VoteUpdateDto
@@ -70,7 +71,7 @@ namespace IPLAwardManagementSystem.Controllers
                 VoteDate = vote.VoteDate
             };
 
-            await LoadDropdownsAsync();
+            await LoadDropdownData();
             return View(dto);
         }
 
@@ -78,26 +79,14 @@ namespace IPLAwardManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VoteUpdateDto dto)
         {
-            if (id != dto.Id) return BadRequest();
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                await LoadDropdownsAsync();
-                return View(dto);
+                await _voteService.UpdateVoteAsync(id, dto);
+                return RedirectToAction(nameof(Index));
             }
 
-            var vote = await _context.Votes.FindAsync(id);
-            if (vote == null) return NotFound();
-
-            vote.PlayerId = dto.PlayerId;
-            vote.AwardId = dto.AwardId;
-            vote.VoterId = dto.VoterId;
-            vote.VoteDate = dto.VoteDate;
-
-            _context.Votes.Update(vote);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            await LoadDropdownData();
+            return View(dto);
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -115,11 +104,15 @@ namespace IPLAwardManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task LoadDropdownsAsync()
+        private async Task LoadDropdownData()
         {
-            ViewBag.Players = new SelectList(await _context.Players.ToListAsync(), "Id", "Name");
-            ViewBag.Awards = new SelectList(await _context.Awards.ToListAsync(), "Id", "Name");
-            ViewBag.Voters = new SelectList(await _context.Voters.ToListAsync(), "Id", "Name");
+            var players = await _playerService.GetAllPlayersAsync();
+            var awards = await _awardService.GetAllAwardsAsync();
+            var voters = await _voterService.GetAllVotersAsync();
+
+            ViewBag.Players = new SelectList(players, "PlayerId", "Name");
+            ViewBag.Awards = new SelectList(awards, "AwardId", "Name");
+            ViewBag.Voters = new SelectList(voters, "VoterId", "Name");
         }
     }
 }
