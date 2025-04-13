@@ -1,0 +1,35 @@
+@model IEnumerable<IPLAwardManagementSystem.DTOs.MatchDto>
+@{
+    ViewData["Title"] = "Matches";
+}
+
+<h2 class="mb-4">Matches</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Schedule New Match</a>
+
+<table class="table table-striped">
+    <thead class="table-primary">
+        <tr>
+            <th>Date</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Venue</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var match in Model)
+    {
+        <tr>
+            <td>@match.MatchDate.ToShortDateString()</td>
+            <td>@match.HomeTeamName</td>
+            <td>@match.AwayTeamName</td>
+            <td>@match.VenueName</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@match.MatchId" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@match.MatchId" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@match.MatchId" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

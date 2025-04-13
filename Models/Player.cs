@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IPLAwardManagementSystem.Models
 {
@@ -20,14 +19,18 @@ namespace IPLAwardManagementSystem.Models
         [StringLength(50)]
         public string Role { get; set; } = string.Empty;
 
+        // Player statistics
+        public int TotalRuns { get; set; } = 0;
+        public int TotalWickets { get; set; } = 0;
+        public int MatchesPlayed { get; set; } = 0;
+        public decimal BattingAverage { get; set; } = 0;
+
         // Foreign Key for Team
         [ForeignKey("Team")]
         public int TeamId { get; set; }
 
-        // One-to-Many Relationship: A player belongs to one team
-        public Team Team { get; set; } = null!;
-
-        // Navigation property for PlayerAwards
+        // Relationships
+        public Team? Team { get; set; }
         public ICollection<PlayerAward> PlayerAwards { get; set; } = new List<PlayerAward>();
     }
 }

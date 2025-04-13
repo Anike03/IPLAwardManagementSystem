@@ -1,0 +1,42 @@
+@model IEnumerable<IPLAwardManagementSystem.DTOs.AwardDto>
+@{
+    ViewData["Title"] = "Awards";
+}
+
+<h2 class="mb-4">Awards</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Create New Award</a>
+
+<table class="table table-striped">
+    <thead class="table-primary">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var award in Model)
+    {
+        <tr>
+            <td>@award.Name</td>
+            <td>@award.Description</td>
+            <td>
+                @if (award.IsActive)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Inactive</span>
+                }
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@award.AwardId" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@award.AwardId" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@award.AwardId" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

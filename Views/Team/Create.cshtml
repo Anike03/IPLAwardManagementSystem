@@ -1,22 +1,32 @@
-@model IPLAwardManagementSystem.Models.Team
+@model IPLAwardManagementSystem.DTOs.TeamCreateDto
 
 @{
     ViewData["Title"] = "Create Team";
 }
 
-<h1>Create Team</h1>
+<h2 class="mb-4">Create New Team</h2>
 
 <form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="TeamName"></label>
+    <div class="mb-3">
+        <label asp-for="TeamName" class="form-label"></label>
         <input asp-for="TeamName" class="form-control" />
         <span asp-validation-for="TeamName" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Coach"></label>
+    <div class="mb-3">
+        <label asp-for="Coach" class="form-label"></label>
         <input asp-for="Coach" class="form-control" />
         <span asp-validation-for="Coach" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <div class="mb-3">
+        <label asp-for="HomeCity" class="form-label"></label>
+        <input asp-for="HomeCity" class="form-control" />
+        <span asp-validation-for="HomeCity" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="FoundingDate" class="form-label"></label>
+        <input asp-for="FoundingDate" class="form-control" type="date" />
+        <span asp-validation-for="FoundingDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </form>
-<a asp-action="Index">Back to List</a>

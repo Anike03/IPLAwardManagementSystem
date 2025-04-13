@@ -1,15 +1,14 @@
-﻿// Interfaces/ITeamService.cs
 using IPLAwardManagementSystem.DTOs;
 
-namespace IPLAwardManagementSystem.Interfaces
+namespace IPLAwardManagementSystem.Services
 {
     public interface ITeamService
     {
-        Task<TeamDto> CreateTeamAsync(TeamCreateDto teamCreateDto);
-        Task<IEnumerable<TeamDto>> GetAllTeamsAsync();
-        Task<TeamDto> GetTeamByIdAsync(int id);
-        Task UpdateTeamAsync(int id, TeamUpdateDto teamUpdateDto);
+        Task<IEnumerable<TeamListDto>> GetAllTeamsAsync();
+        Task<TeamDetailDto?> GetTeamByIdAsync(int id);
+        Task<TeamDetailDto> CreateTeamAsync(TeamCreateDto dto);
+        Task UpdateTeamAsync(int id, TeamUpdateDto dto);
         Task DeleteTeamAsync(int id);
-        Task<IEnumerable<PlayerDto>> GetTeamPlayersAsync(int teamId);
+        Task<IEnumerable<PlayerListDto>> GetPlayersByTeamIdAsync(int teamId);
     }
 }

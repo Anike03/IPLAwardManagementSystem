@@ -1,15 +1,17 @@
-﻿// Interfaces/IVoteService.cs
 using IPLAwardManagementSystem.DTOs;
 
-namespace IPLAwardManagementSystem.Interfaces
+namespace IPLAwardManagementSystem.Services
 {
     public interface IVoteService
     {
-        Task<VoteDto> CreateVoteAsync(VoteCreateDto voteCreateDto);
         Task<IEnumerable<VoteDto>> GetAllVotesAsync();
-        Task<VoteDto> GetVoteByIdAsync(int id);
+        Task<VoteDto?> GetVoteByIdAsync(int id);
+        Task<VoteDto> CreateVoteAsync(VoteCreateDto dto);
         Task DeleteVoteAsync(int id);
-        Task<IEnumerable<VoteDto>> GetVotesForAwardAsync(int awardId);
-        Task<IEnumerable<VoteDto>> GetVotesForPlayerAsync(int playerId);
+
+        Task<int> GetTotalVotesForPlayerAsync(int awardId, int playerId);
+        Task<IEnumerable<VoteDto>> GetVotesByAwardAsync(int awardId);
+        Task<IEnumerable<VoteDto>> GetVotesByPlayerAsync(int playerId);
+        Task<IEnumerable<VoteDto>> GetVotesByVoterAsync(int voterId);
     }
 }

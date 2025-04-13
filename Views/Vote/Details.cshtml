@@ -1,0 +1,21 @@
+@model IPLAwardManagementSystem.DTOs.VoteDto
+@{
+    ViewData["Title"] = "Vote Details";
+}
+
+<h2>Vote Details</h2>
+<dl class="row">
+    <dt class="col-sm-2">Player</dt>
+    <dd class="col-sm-10">@Model.PlayerName</dd>
+
+    <dt class="col-sm-2">Award</dt>
+    <dd class="col-sm-10">@Model.AwardName</dd>
+
+    <dt class="col-sm-2">Voter</dt>
+    <dd class="col-sm-10">@Model.VoterName</dd>
+
+    <dt class="col-sm-2">Vote Date</dt>
+    <dd class="col-sm-10">@Model.VoteDate.ToShortDateString()</dd>
+</dl>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

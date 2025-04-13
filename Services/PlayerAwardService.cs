@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using IPLAwardManagementSystem.Data;
+using AutoMapper;
 using IPLAwardManagementSystem.DTOs;
-using IPLAwardManagementSystem.Interfaces;
 using IPLAwardManagementSystem.Models;
+using IPLAwardManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace IPLAwardManagementSystem.Services
@@ -18,98 +17,79 @@ namespace IPLAwardManagementSystem.Services
             _mapper = mapper;
         }
 
-        public async Task<PlayerAwardDto> NominatePlayerAsync(PlayerAwardCreateDto playerAwardCreateDto)
+        public async Task<PlayerAwardDto> CreateAsync(PlayerAwardCreateDto dto)
         {
-            // Check if player is already nominated for this award
-            var existingNomination = await _context.PlayerAwards
-                .FirstOrDefaultAsync(pa => pa.PlayerId == playerAwardCreateDto.PlayerId &&
-                                         pa.AwardId == playerAwardCreateDto.AwardId);
+            var entity = _mapper.Map<PlayerAward>(dto);
+            _context.PlayerAwards.Add(entity);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<PlayerAwardDto>(entity);
+        }
 
-            if (existingNomination != null)
+        public async Task<bool> DeleteAsync(int playerId, int awardId)
+        {
+            var entity = await _context.PlayerAwards.FindAsync(playerId, awardId);
+            if (entity != null)
             {
-                throw new InvalidOperationException("Player is already nominated for this award");
+                _context.PlayerAwards.Remove(entity);
+                await _context.SaveChangesAsync();
+                return true;
             }
-
-            var playerAward = _mapper.Map<PlayerAward>(playerAwardCreateDto);
-            _context.PlayerAwards.Add(playerAward);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<PlayerAwardDto>(playerAward);
+            return false;
         }
 
-        public async Task<IEnumerable<PlayerAwardDto>> GetAllNominationsAsync()
+        public async Task<IEnumerable<PlayerAwardDto>> GetAllAsync()
         {
-            var nominations = await _context.PlayerAwards
+            var list = await _context.PlayerAwards
                 .Include(pa => pa.Player)
                 .Include(pa => pa.Award)
                 .ToListAsync();
-
-            return _mapper.Map<IEnumerable<PlayerAwardDto>>(nominations);
+            return _mapper.Map<List<PlayerAwardDto>>(list);
         }
 
-        public async Task<PlayerAwardDto> GetNominationAsync(int playerId, int awardId)
+        public async Task<PlayerAwardDto?> GetByIdAsync(int playerId, int awardId)
         {
-            var nomination = await _context.PlayerAwards
+            var entity = await _context.PlayerAwards
                 .Include(pa => pa.Player)
                 .Include(pa => pa.Award)
                 .FirstOrDefaultAsync(pa => pa.PlayerId == playerId && pa.AwardId == awardId);
-
-            if (nomination == null) throw new KeyNotFoundException("Nomination not found");
-            return _mapper.Map<PlayerAwardDto>(nomination);
+            return entity == null ? null : _mapper.Map<PlayerAwardDto>(entity);
         }
 
-        public async Task UpdateNominationAsync(int playerId, int awardId, PlayerAwardUpdateDto playerAwardUpdateDto)
+        public async Task<bool> UpdateAsync(int playerId, int awardId, PlayerAwardUpdateDto dto)
         {
-            var nomination = await _context.PlayerAwards
-                .FirstOrDefaultAsync(pa => pa.PlayerId == playerId && pa.AwardId == awardId);
-
-            if (nomination == null) throw new KeyNotFoundException("Nomination not found");
-
-            _mapper.Map(playerAwardUpdateDto, nomination);
-            await _context.SaveChangesAsync();
+            var entity = await _context.PlayerAwards.FindAsync(playerId, awardId);
+            if (entity != null)
+            {
+                _mapper.Map(dto, entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-        public async Task DeleteNominationAsync(int playerId, int awardId)
+        public async Task<IEnumerable<PlayerAwardDto>> GetAwardsByPlayerIdAsync(int playerId)
         {
-            var nomination = await _context.PlayerAwards
-                .FirstOrDefaultAsync(pa => pa.PlayerId == playerId && pa.AwardId == awardId);
-
-            if (nomination == null) throw new KeyNotFoundException("Nomination not found");
-
-            _context.PlayerAwards.Remove(nomination);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<PlayerAwardDto>> GetNominationsByPlayerAsync(int playerId)
-        {
-            var nominations = await _context.PlayerAwards
+            var list = await _context.PlayerAwards
+                .Include(pa => pa.Award)
+                .Include(pa => pa.Player)
                 .Where(pa => pa.PlayerId == playerId)
-                .Include(pa => pa.Award)
                 .ToListAsync();
-
-            return _mapper.Map<IEnumerable<PlayerAwardDto>>(nominations);
+            return _mapper.Map<List<PlayerAwardDto>>(list);
         }
 
-        public async Task<IEnumerable<PlayerAwardDto>> GetNominationsByAwardAsync(int awardId)
+        public async Task<IEnumerable<PlayerAwardDto>> GetNominationsByAwardIdAsync(int awardId)
         {
-            var nominations = await _context.PlayerAwards
+            var list = await _context.PlayerAwards
+                .Include(pa => pa.Award)
+                .Include(pa => pa.Player)
                 .Where(pa => pa.AwardId == awardId)
-                .Include(pa => pa.Player)
-                .ThenInclude(p => p.Team)
                 .ToListAsync();
-
-            return _mapper.Map<IEnumerable<PlayerAwardDto>>(nominations);
+            return _mapper.Map<List<PlayerAwardDto>>(list);
         }
 
-        public async Task<IEnumerable<PlayerAwardDto>> GetWinnersAsync()
+        public async Task<bool> IsPlayerNominatedAsync(int playerId, int awardId)
         {
-            var winners = await _context.PlayerAwards
-                .Where(pa => pa.IsWinner)
-                .Include(pa => pa.Player)
-                .ThenInclude(p => p.Team)
-                .Include(pa => pa.Award)
-                .ToListAsync();
-
-            return _mapper.Map<IEnumerable<PlayerAwardDto>>(winners);
+            return await _context.PlayerAwards.AnyAsync(pa => pa.PlayerId == playerId && pa.AwardId == awardId);
         }
     }
 }

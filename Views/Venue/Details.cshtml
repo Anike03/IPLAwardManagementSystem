@@ -1,0 +1,20 @@
+@model IPLAwardManagementSystem.DTOs.VenueDto
+@{
+    ViewData["Title"] = "Venue Details";
+}
+
+<h2 class="mb-4">Venue Details</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">City</dt>
+    <dd class="col-sm-9">@Model.City</dd>
+
+    <dt class="col-sm-3">Capacity</dt>
+    <dd class="col-sm-9">@Model.Capacity</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.VenueId" class="btn btn-warning mt-3">Edit</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>

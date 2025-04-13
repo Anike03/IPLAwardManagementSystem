@@ -1,22 +1,39 @@
-@model IPLAwardManagementSystem.Models.Team
+@model IPLAwardManagementSystem.DTOs.TeamDetailDto
 
 @{
     ViewData["Title"] = "Team Details";
 }
 
-<h1>Details</h1>
+<h2 class="mb-4">Team Details</h2>
 
-<div>
-    <h4>Team</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Team Name</dt>
-        <dd class="col-sm-10">@Model.TeamName</dd>
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.TeamName</dd>
 
-        <dt class="col-sm-2">Coach</dt>
-        <dd class="col-sm-10">@Model.Coach</dd>
-    </dl>
-</div>
+    <dt class="col-sm-3">Coach</dt>
+    <dd class="col-sm-9">@Model.Coach</dd>
 
-<a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.TeamId">Edit</a> |
-<a asp-action="Index">Back to List</a>
+    <dt class="col-sm-3">Home City</dt>
+    <dd class="col-sm-9">@Model.HomeCity</dd>
+
+    <dt class="col-sm-3">Founded</dt>
+    <dd class="col-sm-9">@Model.FoundingDate.ToShortDateString()</dd>
+</dl>
+
+<h4 class="mt-4">Players</h4>
+@if (Model.Players != null && Model.Players.Any())
+{
+    <ul class="list-group">
+        @foreach (var player in Model.Players)
+        {
+            <li class="list-group-item">@player.Name (@player.Role)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No players in this team.</p>
+}
+
+<a asp-action="Edit" asp-route-id="@Model.TeamId" class="btn btn-warning mt-4">Edit</a>
+<a asp-action="Index" class="btn btn-secondary mt-4">Back to List</a>

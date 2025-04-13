@@ -1,15 +1,31 @@
-﻿// Interfaces/IVenueService.cs
 using IPLAwardManagementSystem.DTOs;
 
-namespace IPLAwardManagementSystem.Interfaces
+namespace IPLAwardManagementSystem.Services
 {
     public interface IVenueService
     {
-        Task<VenueDto> CreateVenueAsync(VenueCreateDto venueCreateDto);
+        Task<VenueDto?> GetVenueByIdAsync(int id);
         Task<IEnumerable<VenueDto>> GetAllVenuesAsync();
-        Task<VenueDto> GetVenueByIdAsync(int id);
-        Task UpdateVenueAsync(int id, VenueUpdateDto venueUpdateDto);
+        Task<VenueDto> CreateVenueAsync(VenueCreateDto venueDto);
+        Task UpdateVenueAsync(int id, VenueUpdateDto venueDto);
         Task DeleteVenueAsync(int id);
-        Task<IEnumerable<MatchDto>> GetMatchesAtVenueAsync(int venueId);
+
+        Task AssignTeamToVenueAsync(int venueId, int teamId);
+        Task RemoveTeamFromVenueAsync(int venueId, int teamId);
+        Task UpdateVenueTeamStatsAsync(int venueId, int teamId, int matchesPlayed);
+
+        Task<IEnumerable<VenueTeamDto>> GetTeamsForVenueAsync(int venueId);
+        Task<IEnumerable<VenueDto>> GetVenuesForTeamAsync(int teamId);
+        Task<VenueStatsDto> GetVenueStatsAsync(int venueId);
+        Task<bool> IsTeamAssignedToVenueAsync(int venueId, int teamId);
+
+        Task ScheduleMatchAtVenueAsync(int venueId, int homeTeamId, int awayTeamId, DateTime matchDate);
+    }
+
+    public class VenueStatsDto
+    {
+        public int TotalMatchesHosted { get; set; }
+        public int UniqueTeamsHosted { get; set; }
+        public DateTime LastMatchDate { get; set; }
     }
 }

@@ -1,35 +1,33 @@
-@model IPLAwardManagementSystem.Models.Player
-
+@model IPLAwardManagementSystem.DTOs.PlayerCreateDto
 @{
     ViewData["Title"] = "Create Player";
 }
 
-<h1>Create Player</h1>
+<h2 class="mb-4">Add New Player</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
+<form asp-action="Create">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Age"></label>
-        <input asp-for="Age" class="form-control" />
-        <span asp-validation-for="Age" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Role"></label>
+    <div class="mb-3">
+        <label asp-for="Role" class="form-label"></label>
         <input asp-for="Role" class="form-control" />
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="TeamId">Team</label>
-        <select asp-for="TeamId" class="form-control" asp-items="ViewBag.TeamId">
-            <option value="">-- Select a team --</option>
+    <div class="mb-3">
+        <label asp-for="Age" class="form-label"></label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TeamId" class="form-label">Team</label>
+        <select asp-for="TeamId" asp-items="ViewBag.Teams" class="form-select">
+            <option value="">-- Select Team --</option>
         </select>
         <span asp-validation-for="TeamId" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-success">Add Player</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
-
-<a asp-action="Index">Back to List</a>

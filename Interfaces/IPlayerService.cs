@@ -1,16 +1,14 @@
-﻿// Interfaces/IPlayerService.cs
 using IPLAwardManagementSystem.DTOs;
 
-namespace IPLAwardManagementSystem.Interfaces
+namespace IPLAwardManagementSystem.Services
 {
     public interface IPlayerService
     {
-        Task<PlayerDto> CreatePlayerAsync(PlayerCreateDto playerCreateDto);
-        Task<IEnumerable<PlayerDto>> GetAllPlayersAsync();
-        Task<PlayerDto> GetPlayerByIdAsync(int id);
-        Task UpdatePlayerAsync(int id, PlayerUpdateDto playerUpdateDto);
+        Task<IEnumerable<PlayerListDto>> GetAllPlayersAsync();
+        Task<PlayerDetailDto?> GetPlayerByIdAsync(int id);
+        Task<PlayerDetailDto> CreatePlayerAsync(PlayerCreateDto dto);
+        Task UpdatePlayerAsync(int id, PlayerUpdateDto dto);
         Task DeletePlayerAsync(int id);
-        Task<IEnumerable<AwardDto>> GetPlayerAwardsAsync(int playerId);
-        Task<IEnumerable<PlayerDto>> GetPlayersByTeamAsync(int teamId);
+        Task<IEnumerable<PlayerAwardDto>> GetPlayerAwardsAsync(int playerId);
     }
 }

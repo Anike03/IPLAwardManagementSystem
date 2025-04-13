@@ -1,53 +1,76 @@
-﻿// Mappings/MappingProfile.cs
-using AutoMapper;
+﻿using AutoMapper;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Models;
 
+
 namespace IPLAwardManagementSystem.Mappings
 {
-    public class MappingProfile : Profile
+    public class MapperProfile : Profile
     {
-        public MappingProfile()
+        public MapperProfile()
         {
-            // Award mappings
-            CreateMap<AwardCreateDto, Award>();
-            CreateMap<AwardUpdateDto, Award>();
-            CreateMap<Award, AwardDto>();
+            // Team
+            CreateMap<Team, TeamDto>().ReverseMap();
+            CreateMap<Team, TeamCreateDto>().ReverseMap();
+            CreateMap<Team, TeamUpdateDto>().ReverseMap();
+            CreateMap<Team, TeamListDto>()
+    .ForMember(dest => dest.PlayerCount, opt => opt.MapFrom(src => src.Players.Count))
+    .ReverseMap();
 
-            // Player mappings
-            CreateMap<PlayerCreateDto, Player>();
-            CreateMap<PlayerUpdateDto, Player>();
-            CreateMap<Player, PlayerDto>()
-                .ForMember(dest => dest.Awards, opt => opt.MapFrom(src => src.PlayerAwards.Select(pa => pa.Award)));
+            CreateMap<Team, TeamDetailDto>().ReverseMap();
 
-            // Team mappings
-            CreateMap<TeamCreateDto, Team>();
-            CreateMap<TeamUpdateDto, Team>();
-            CreateMap<Team, TeamDto>();
 
-            // Venue mappings
-            CreateMap<VenueCreateDto, Venue>();
-            CreateMap<VenueUpdateDto, Venue>();
-            CreateMap<Venue, VenueDto>();
+            // Player
+            CreateMap<Player, PlayerDto>().ReverseMap();
+            CreateMap<Player, PlayerCreateDto>().ReverseMap();
+            CreateMap<Player, PlayerUpdateDto>().ReverseMap();
+            CreateMap<Player, PlayerListDto>()
+            .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team.TeamName));
+            CreateMap<Player, PlayerDetailDto>().ReverseMap();
 
-            // Match mappings
-            CreateMap<MatchCreateDto, Match>();
-            CreateMap<MatchUpdateDto, Match>();
-            CreateMap<Match, MatchDto>();
 
-            // Voter mappings
-            CreateMap<VoterCreateDto, Voter>();
-            CreateMap<VoterUpdateDto, Voter>();
-            CreateMap<Voter, VoterDto>();
+            // Match
+            CreateMap<Match, MatchDto>()
+    .ForMember(dest => dest.VenueName, opt => opt.MapFrom(src => src.Venue.Name))
+    .ForMember(dest => dest.HomeTeamName, opt => opt.MapFrom(src => src.HomeTeam.TeamName))
+    .ForMember(dest => dest.AwayTeamName, opt => opt.MapFrom(src => src.AwayTeam.TeamName));
 
-            // Vote mappings
-            CreateMap<VoteCreateDto, Vote>();
-            CreateMap<Vote, VoteDto>();
+            CreateMap<Match, MatchCreateDto>().ReverseMap();
+            CreateMap<Match, MatchUpdateDto>().ReverseMap();
 
-            // PlayerAward mappings
-            CreateMap<PlayerAwardCreateDto, PlayerAward>();
-            CreateMap<PlayerAwardUpdateDto, PlayerAward>();
-            CreateMap<PlayerAward, PlayerAwardDto>();
+            // Venue
+            CreateMap<Venue, VenueDto>().ReverseMap();
+            CreateMap<Venue, VenueCreateDto>().ReverseMap();
+            CreateMap<Venue, VenueUpdateDto>().ReverseMap();
+
+            // Award
+            CreateMap<Award, AwardDto>().ReverseMap();
+            CreateMap<Award, AwardCreateDto>().ReverseMap();
+            CreateMap<Award, AwardUpdateDto>().ReverseMap();
+
+            // Voter
+            CreateMap<Voter, VoterDto>().ReverseMap();
+            CreateMap<Voter, VoterCreateDto>().ReverseMap();
+            CreateMap<Voter, VoterUpdateDto>().ReverseMap();
+
+            // Vote
+            CreateMap<Vote, VoteDto>()
+    .ForMember(dest => dest.PlayerName, opt => opt.MapFrom(src => src.Player.Name))
+    .ForMember(dest => dest.AwardName, opt => opt.MapFrom(src => src.Award.Name))
+    .ForMember(dest => dest.VoterName, opt => opt.MapFrom(src => src.Voter.Name));
+
+            CreateMap<Vote, VoteCreateDto>().ReverseMap();
+            CreateMap<Vote, VoteUpdateDto>().ReverseMap();
+
+
+            // PlayerAward
+            CreateMap<PlayerAward, PlayerAwardDto>().ReverseMap();
+            CreateMap<PlayerAward, PlayerAwardCreateDto>().ReverseMap();
+            CreateMap<PlayerAward, PlayerAwardUpdateDto>().ReverseMap();
+
+            // VenueTeam
+            CreateMap<VenueTeam, VenueTeamDto>().ReverseMap();
+            CreateMap<VenueTeam, VenueTeamCreateDto>().ReverseMap();
         }
     }
 }

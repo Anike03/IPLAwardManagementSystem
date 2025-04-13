@@ -1,11 +1,9 @@
-﻿// DTOs/PlayerAwardDTOs.cs
-namespace IPLAwardManagementSystem.DTOs
+﻿namespace IPLAwardManagementSystem.DTOs
 {
     public class PlayerAwardCreateDto
     {
         public int PlayerId { get; set; }
         public int AwardId { get; set; }
-        public bool IsWinner { get; set; }
     }
 
     public class PlayerAwardUpdateDto
@@ -16,10 +14,11 @@ namespace IPLAwardManagementSystem.DTOs
     public class PlayerAwardDto
     {
         public int PlayerId { get; set; }
+        public string PlayerName { get; set; } = string.Empty;
         public int AwardId { get; set; }
+        public string AwardName { get; set; } = string.Empty;
         public bool IsWinner { get; set; }
         public DateTime NominationDate { get; set; }
-        public PlayerDto? Player { get; set; }
-        public AwardDto? Award { get; set; }
+        public int VotesReceived { get; set; }
     }
 }

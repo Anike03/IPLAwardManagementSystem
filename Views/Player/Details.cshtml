@@ -1,28 +1,44 @@
-@model IPLAwardManagementSystem.Models.Player
-
+@model IPLAwardManagementSystem.DTOs.PlayerDetailDto
 @{
     ViewData["Title"] = "Player Details";
 }
 
-<h1>Details</h1>
+<h2 class="mb-4">Player Details</h2>
 
-<div>
-    <h4>Player</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Name</dt>
-        <dd class="col-sm-10">@Model.Name</dd>
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
 
-        <dt class="col-sm-2">Age</dt>
-        <dd class="col-sm-10">@Model.Age</dd>
+    <dt class="col-sm-3">Role</dt>
+    <dd class="col-sm-9">@Model.Role</dd>
 
-        <dt class="col-sm-2">Role</dt>
-        <dd class="col-sm-10">@Model.Role</dd>
+    <dt class="col-sm-3">Age</dt>
+    <dd class="col-sm-9">@Model.Age</dd>
 
-        <dt class="col-sm-2">Team</dt>
-        <dd class="col-sm-10">@Model.Team</dd>
-    </dl>
-</div>
+    <dt class="col-sm-3">Team</dt>
+    <dd class="col-sm-9">@Model.TeamName</dd>
+</dl>
 
-<a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.PlayerId">Edit</a> |
-<a asp-action="Index">Back to List</a>
+<h4 class="mt-4">Awards</h4>
+@if (Model.Awards != null && Model.Awards.Any())
+{
+    <ul class="list-group">
+        @foreach (var award in Model.Awards)
+        {
+            <li class="list-group-item">
+                @award.AwardName
+                @if (award.IsWinner)
+                {
+                    <span class="badge bg-success ms-2">Winner</span>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No awards for this player.</p>
+}
+
+<a asp-action="Edit" asp-route-id="@Model.PlayerId" class="btn btn-warning mt-4">Edit</a>
+<a asp-action="Index" class="btn btn-secondary mt-4">Back to List</a>

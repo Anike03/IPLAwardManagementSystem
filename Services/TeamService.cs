@@ -1,11 +1,8 @@
-﻿using IPLAwardManagementSystem.Data;
-using IPLAwardManagementSystem.DTOs;
-using IPLAwardManagementSystem.Interfaces;
-using IPLAwardManagementSystem.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
+using IPLAwardManagementSystem.DTOs;
+using IPLAwardManagementSystem.Models;
+using IPLAwardManagementSystem.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace IPLAwardManagementSystem.Services
 {
@@ -20,55 +17,56 @@ namespace IPLAwardManagementSystem.Services
             _mapper = mapper;
         }
 
-        public async Task<TeamDto> CreateTeamAsync(TeamCreateDto teamCreateDto)
+        public async Task<TeamDetailDto> CreateTeamAsync(TeamCreateDto dto)
         {
-            var team = _mapper.Map<Team>(teamCreateDto);
+            var team = _mapper.Map<Team>(dto);
             _context.Teams.Add(team);
             await _context.SaveChangesAsync();
-            return _mapper.Map<TeamDto>(team);
-        }
-
-        public async Task<IEnumerable<TeamDto>> GetAllTeamsAsync()
-        {
-            var teams = await _context.Teams.ToListAsync();
-            return _mapper.Map<IEnumerable<TeamDto>>(teams);
-        }
-
-        public async Task<TeamDto> GetTeamByIdAsync(int id)
-        {
-            var team = await _context.Teams
-                .Include(t => t.Players)
-                .FirstOrDefaultAsync(t => t.TeamId == id);
-
-            if (team == null) throw new KeyNotFoundException("Team not found");
-            return _mapper.Map<TeamDto>(team);
-        }
-
-        public async Task UpdateTeamAsync(int id, TeamUpdateDto teamUpdateDto)
-        {
-            var team = await _context.Teams.FindAsync(id);
-            if (team == null) throw new KeyNotFoundException("Team not found");
-
-            _mapper.Map(teamUpdateDto, team);
-            await _context.SaveChangesAsync();
+            return _mapper.Map<TeamDetailDto>(team);
         }
 
         public async Task DeleteTeamAsync(int id)
         {
             var team = await _context.Teams.FindAsync(id);
-            if (team == null) throw new KeyNotFoundException("Team not found");
-
-            _context.Teams.Remove(team);
-            await _context.SaveChangesAsync();
+            if (team != null)
+            {
+                _context.Teams.Remove(team);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task<IEnumerable<PlayerDto>> GetTeamPlayersAsync(int teamId)
+        public async Task<IEnumerable<TeamListDto>> GetAllTeamsAsync()
+        {
+            var teams = await _context.Teams.Include(t => t.Players).ToListAsync();
+            return _mapper.Map<List<TeamListDto>>(teams);
+        }
+
+        public async Task<TeamDetailDto?> GetTeamByIdAsync(int id)
+        {
+            var team = await _context.Teams
+                .Include(t => t.Players)
+                .FirstOrDefaultAsync(t => t.TeamId == id);
+
+            return team == null ? null : _mapper.Map<TeamDetailDto>(team);
+        }
+
+        public async Task<IEnumerable<PlayerListDto>> GetPlayersByTeamIdAsync(int teamId)
         {
             var players = await _context.Players
                 .Where(p => p.TeamId == teamId)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<PlayerDto>>(players);
+            return _mapper.Map<List<PlayerListDto>>(players);
+        }
+
+        public async Task UpdateTeamAsync(int id, TeamUpdateDto dto)
+        {
+            var team = await _context.Teams.FindAsync(id);
+            if (team != null)
+            {
+                _mapper.Map(dto, team);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

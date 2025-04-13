@@ -1,17 +1,18 @@
-﻿// Interfaces/IPlayerAwardService.cs
 using IPLAwardManagementSystem.DTOs;
 
-namespace IPLAwardManagementSystem.Interfaces
+namespace IPLAwardManagementSystem.Services
 {
     public interface IPlayerAwardService
     {
-        Task<PlayerAwardDto> NominatePlayerAsync(PlayerAwardCreateDto playerAwardCreateDto);
-        Task<IEnumerable<PlayerAwardDto>> GetAllNominationsAsync();
-        Task<PlayerAwardDto> GetNominationAsync(int playerId, int awardId);
-        Task UpdateNominationAsync(int playerId, int awardId, PlayerAwardUpdateDto playerAwardUpdateDto);
-        Task DeleteNominationAsync(int playerId, int awardId);
-        Task<IEnumerable<PlayerAwardDto>> GetNominationsByPlayerAsync(int playerId);
-        Task<IEnumerable<PlayerAwardDto>> GetNominationsByAwardAsync(int awardId);
-        Task<IEnumerable<PlayerAwardDto>> GetWinnersAsync();
+        Task<IEnumerable<PlayerAwardDto>> GetAllAsync();
+        Task<PlayerAwardDto?> GetByIdAsync(int playerId, int awardId);
+        Task<PlayerAwardDto> CreateAsync(PlayerAwardCreateDto dto);
+        Task<bool> UpdateAsync(int playerId, int awardId, PlayerAwardUpdateDto dto);
+        Task<bool> DeleteAsync(int playerId, int awardId);
+
+        // Query methods
+        Task<IEnumerable<PlayerAwardDto>> GetAwardsByPlayerIdAsync(int playerId);
+        Task<IEnumerable<PlayerAwardDto>> GetNominationsByAwardIdAsync(int awardId);
+        Task<bool> IsPlayerNominatedAsync(int playerId, int awardId);
     }
 }

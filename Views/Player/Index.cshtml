@@ -1,20 +1,17 @@
-@model IEnumerable<IPLAwardManagementSystem.Models.Player>
+@model IEnumerable<IPLAwardManagementSystem.DTOs.PlayerListDto>
 @{
     ViewData["Title"] = "Players";
 }
 
-<h1>Player List</h1>
+<h2 class="mb-4">Players</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Add New Player</a>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New Player</a>
-</p>
-
-<table class="table">
-    <thead>
+<table class="table table-striped">
+    <thead class="table-primary">
         <tr>
             <th>Name</th>
-            <th>Age</th>
             <th>Role</th>
+            <th>Age</th>
             <th>Team</th>
             <th></th>
         </tr>
@@ -24,13 +21,13 @@
     {
         <tr>
             <td>@player.Name</td>
-            <td>@player.Age</td>
             <td>@player.Role</td>
-            <td>@player.Team</td>
+            <td>@player.Age</td>
+            <td>@player.TeamName</td>
             <td>
-                <a asp-action="Details" asp-route-id="@player.PlayerId">Details</a> |
-                <a asp-action="Edit" asp-route-id="@player.PlayerId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@player.PlayerId">Delete</a>
+                <a asp-action="Details" asp-route-id="@player.PlayerId" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@player.PlayerId" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@player.PlayerId" class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>
     }

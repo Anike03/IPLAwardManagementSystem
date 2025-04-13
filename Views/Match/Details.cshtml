@@ -1,0 +1,23 @@
+@model IPLAwardManagementSystem.DTOs.MatchDto
+@{
+    ViewData["Title"] = "Match Details";
+}
+
+<h2 class="mb-4">Match Details</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Match Date</dt>
+    <dd class="col-sm-9">@Model.MatchDate.ToShortDateString()</dd>
+
+    <dt class="col-sm-3">Venue</dt>
+    <dd class="col-sm-9">@Model.VenueName</dd>
+
+    <dt class="col-sm-3">Home Team</dt>
+    <dd class="col-sm-9">@Model.HomeTeamName</dd>
+
+    <dt class="col-sm-3">Away Team</dt>
+    <dd class="col-sm-9">@Model.AwayTeamName</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.MatchId" class="btn btn-warning mt-3">Edit</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>

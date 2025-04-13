@@ -19,6 +19,8 @@ namespace IPLAwardManagementSystem.Data
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Voter> Voters { get; set; }
+        public DbSet<VenueTeam> VenueTeams { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,9 +28,16 @@ namespace IPLAwardManagementSystem.Data
 
             // Configure many-to-many relationship between Match and Team
             modelBuilder.Entity<Match>()
-                .HasMany(m => m.Teams)
-                .WithMany(t => t.Matches)
-                .UsingEntity(j => j.ToTable("MatchTeam"));
+         .HasOne(m => m.HomeTeam)
+         .WithMany()
+         .HasForeignKey(m => m.HomeTeamId)
+         .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.AwayTeam)
+                .WithMany()
+                .HasForeignKey(m => m.AwayTeamId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Configure composite primary key for PlayerAward
             modelBuilder.Entity<PlayerAward>()
@@ -60,6 +69,9 @@ namespace IPLAwardManagementSystem.Data
                 .HasOne(v => v.Voter)
                 .WithMany(v => v.Votes)
                 .HasForeignKey(v => v.VoterId);
+            // Configure the composite primary key for VenueTeam
+            modelBuilder.Entity<VenueTeam>()
+                .HasKey(vt => new { vt.VenueId, vt.TeamId });
         }
     }
 }

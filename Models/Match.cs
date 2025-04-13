@@ -11,17 +11,24 @@ namespace IPLAwardManagementSystem.Models
         [Required]
         public DateTime MatchDate { get; set; }
 
-        // Foreign Key for Venue
+        public int SeasonYear { get; set; } // Added field
+
+        // Foreign Keys
         [ForeignKey("Venue")]
         public int VenueId { get; set; }
 
-        // One-to-Many Relationship: A match is played at one venue
-        public Venue Venue { get; set; } = null!; // Use null! to suppress null warnings
+        public int? HomeTeamId { get; set; }
+        public int? AwayTeamId { get; set; }
 
-        // Many-to-Many Relationship: A match involves two teams
-        public ICollection<Team> Teams { get; set; } = new List<Team>(); // Initialize to avoid null warnings
+        // Navigation properties
+        public Venue? Venue { get; set; }
+
+        [ForeignKey("HomeTeamId")]
+        public Team? HomeTeam { get; set; }
+
+        [ForeignKey("AwayTeamId")]
+        public Team? AwayTeam { get; set; }
+
+        public string Result { get; set; } = string.Empty; // Added field
     }
 }
-
-
-

@@ -1,0 +1,41 @@
+@model IPLAwardManagementSystem.DTOs.MatchUpdateDto
+@{
+    ViewData["Title"] = "Edit Match";
+}
+
+<h2 class="mb-4">Edit Match</h2>
+
+<form asp-action="Edit">
+    <div class="mb-3">
+        <label asp-for="MatchDate" class="form-label"></label>
+        <input asp-for="MatchDate" class="form-control" type="datetime-local" />
+        <span asp-validation-for="MatchDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="VenueId" class="form-label">Venue</label>
+        <select asp-for="VenueId" asp-items="ViewBag.Venues" class="form-select">
+            <option value="">-- Select Venue --</option>
+        </select>
+        <span asp-validation-for="VenueId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HomeTeamId" class="form-label">Home Team</label>
+        <select asp-for="HomeTeamId" asp-items="ViewBag.Teams" class="form-select">
+            <option value="">-- Select Home Team --</option>
+        </select>
+        <span asp-validation-for="HomeTeamId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AwayTeamId" class="form-label">Away Team</label>
+        <select asp-for="AwayTeamId" asp-items="ViewBag.Teams" class="form-select">
+            <option value="">-- Select Away Team --</option>
+        </select>
+        <span asp-validation-for="AwayTeamId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Match</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,41 @@
+@model IPLAwardManagementSystem.DTOs.VoteCreateDto
+@{
+    ViewData["Title"] = "Create Vote";
+}
+
+<h2 class="mb-4">Create Vote</h2>
+
+<form asp-action="Create">
+    <div class="mb-3">
+        <label asp-for="PlayerId" class="form-label">Player</label>
+        <select asp-for="PlayerId" asp-items="ViewBag.Players" class="form-select">
+            <option value="">-- Select Player --</option>
+        </select>
+        <span asp-validation-for="PlayerId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AwardId" class="form-label">Award</label>
+        <select asp-for="AwardId" asp-items="ViewBag.Awards" class="form-select">
+            <option value="">-- Select Award --</option>
+        </select>
+        <span asp-validation-for="AwardId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="VoterId" class="form-label">Voter</label>
+        <select asp-for="VoterId" asp-items="ViewBag.Voters" class="form-select">
+            <option value="">-- Select Voter --</option>
+        </select>
+        <span asp-validation-for="VoterId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="VoteDate" class="form-label">Vote Date</label>
+        <input asp-for="VoteDate" class="form-control" type="date" />
+        <span asp-validation-for="VoteDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

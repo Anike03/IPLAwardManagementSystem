@@ -1,0 +1,38 @@
+@model IEnumerable<IPLAwardManagementSystem.DTOs.VoteDto>
+@{
+    ViewData["Title"] = "Vote List";
+}
+
+<h2>Votes</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Cast Vote</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Award</th>
+            <th>Voter</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.PlayerName</td>
+            <td>@item.AwardName</td>
+            <td>@item.VoterName</td>
+            <td>@item.VoteDate.ToShortDateString()</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

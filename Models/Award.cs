@@ -1,22 +1,24 @@
-﻿// Models/Award.cs
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace IPLAwardManagementSystem.Models
-
 {
     public class Award
     {
+        [Key]
         public int Id { get; set; }
-        public string? Name { get; set; } // e.g., "Best Batsman", "Purple Cap"
+
+        [Required]
+        [StringLength(100)]
+        public string? Name { get; set; }
+
         public string? Description { get; set; }
+        public int SeasonYear { get; set; } // Added field
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
 
         // Navigation properties
-        public ICollection<PlayerAward>? PlayerAwards { get; set; }
-        public ICollection<Vote>? Votes { get; set; }
-        //public object? PlayerAwards { get; internal set; }
+        public ICollection<PlayerAward> PlayerAwards { get; set; } = new List<PlayerAward>();
+        public ICollection<Vote> Votes { get; set; } = new List<Vote>();
     }
 }
-

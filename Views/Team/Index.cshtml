@@ -1,19 +1,19 @@
-@model IEnumerable<IPLAwardManagementSystem.Models.Team>
+@model IEnumerable<IPLAwardManagementSystem.DTOs.TeamListDto>
+
 @{
     ViewData["Title"] = "Teams";
 }
 
-<h1>Team List</h1>
+<h2 class="mb-4">Teams</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Create New Team</a>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New Team</a>
-</p>
-
-<table class="table">
-    <thead>
+<table class="table table-striped table-hover">
+    <thead class="table-primary">
         <tr>
-            <th>Team Name</th>
+            <th>Name</th>
             <th>Coach</th>
+            <th>City</th>
+            <th>Players</th>
             <th></th>
         </tr>
     </thead>
@@ -23,10 +23,12 @@
         <tr>
             <td>@team.TeamName</td>
             <td>@team.Coach</td>
+            <td>@team.HomeCity</td>
+            <td>@team.PlayerCount</td>
             <td>
-                <a asp-action="Details" asp-route-id="@team.TeamId">Details</a> |
-                <a asp-action="Edit" asp-route-id="@team.TeamId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@team.TeamId">Delete</a>
+                <a asp-action="Details" asp-route-id="@team.TeamId" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@team.TeamId" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@team.TeamId" class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>
     }
