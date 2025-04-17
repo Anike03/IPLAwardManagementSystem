@@ -4,6 +4,7 @@ using IPLAwardManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IPLAwardManagementSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250417044930_AddYearAndIsWinnerToPlayerAward")]
+    partial class AddYearAndIsWinnerToPlayerAward
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,9 +49,6 @@ namespace IPLAwardManagementSystem.Data.Migrations
 
                     b.Property<int>("SeasonYear")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AwardId");
 
@@ -149,12 +149,6 @@ namespace IPLAwardManagementSystem.Data.Migrations
 
                     b.Property<bool>("IsWinner")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime>("NominationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VotesReceived")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("Year")
                         .HasColumnType("datetime2");

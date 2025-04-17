@@ -245,9 +245,10 @@
                                 <li><a class="dropdown-item" asp-controller="Award" asp-action="Index"><i class="fas fa-award"></i> All Awards</a></li>
                                 <li><a class="dropdown-item" asp-controller="PlayerAward" asp-action="Index"><i class="fas fa-star"></i> Nominations</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="PlayerAward" asp-action="Winners"><i class="fas fa-medal"></i> Winners</a></li>
+                               
                             </ul>
                         </li>
+
 
                         <li class="nav-item dropdown @(new[] {"Voter", "Vote"}.Contains(ViewContext.RouteData.Values["Controller"].ToString()) ? "active" : "")">
                             <a class="nav-link dropdown-toggle" href="#" id="votingDropdown" role="button"

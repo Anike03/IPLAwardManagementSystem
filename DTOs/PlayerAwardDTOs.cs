@@ -1,9 +1,14 @@
-﻿namespace IPLAwardManagementSystem.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IPLAwardManagementSystem.DTOs
 {
     public class PlayerAwardCreateDto
     {
         public int PlayerId { get; set; }
         public int AwardId { get; set; }
+        public DateTime NominationDate { get; set; } = DateTime.UtcNow;
+        public bool IsWinner { get; set; } = false;
+        public int VotesReceived { get; set; } = 0;
     }
 
     public class PlayerAwardUpdateDto

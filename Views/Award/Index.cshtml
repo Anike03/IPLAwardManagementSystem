@@ -12,31 +12,33 @@
             <th>Name</th>
             <th>Description</th>
             <th>Status</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var award in Model)
-    {
-        <tr>
-            <td>@award.Name</td>
-            <td>@award.Description</td>
-            <td>
-                @if (award.IsActive)
-                {
-                    <span class="badge bg-success">Active</span>
-                }
-                else
-                {
-                    <span class="badge bg-secondary">Inactive</span>
-                }
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@award.AwardId" class="btn btn-info btn-sm">Details</a>
-                <a asp-action="Edit" asp-route-id="@award.AwardId" class="btn btn-warning btn-sm">Edit</a>
-                <a asp-action="Delete" asp-route-id="@award.AwardId" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-    }
+        @foreach (var award in Model)
+
+        {
+            <tr>
+                <td>@award.Name</td>
+                <td>@award.Description</td>
+                <td>
+                    @if (award.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactive</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@award.AwardId" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@award.AwardId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@award.AwardId" class="btn btn-danger btn-sm">Delete</a>
+                    <a asp-action="Nominate" asp-route-awardId="@award.AwardId" class="btn btn-outline-primary btn-sm">Nominations</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

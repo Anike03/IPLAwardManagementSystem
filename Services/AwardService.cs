@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Models;
 using IPLAwardManagementSystem.Services;
@@ -60,9 +60,22 @@ namespace IPLAwardManagementSystem.Services
 
         public async Task NominatePlayerAsync(int awardId, int playerId)
         {
-            var nomination = new PlayerAward { AwardId = awardId, PlayerId = playerId };
-            _context.PlayerAwards.Add(nomination);
-            await _context.SaveChangesAsync();
+            if (!await IsPlayerNominatedAsync(awardId, playerId))
+            {
+                var votes = await _context.Votes.CountAsync(v => v.AwardId == awardId && v.PlayerId == playerId);
+
+                var nomination = new PlayerAward
+                {
+                    AwardId = awardId,
+                    PlayerId = playerId,
+                    NominationDate = DateTime.UtcNow,
+                    IsWinner = false,
+                    VotesReceived = votes
+                };
+
+                _context.PlayerAwards.Add(nomination);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task RemoveNominationAsync(int awardId, int playerId)
@@ -95,15 +108,37 @@ namespace IPLAwardManagementSystem.Services
             }
         }
 
+        // ✅ LIVE VOTE COUNT + WINNER CALCULATION
         public async Task<IEnumerable<PlayerAwardDto>> GetAwardNomineesAsync(int awardId)
         {
-            var nominees = await _context.PlayerAwards
+            var nominations = await _context.PlayerAwards
                 .Include(pa => pa.Player)
                 .Include(pa => pa.Award)
                 .Where(pa => pa.AwardId == awardId)
                 .ToListAsync();
 
-            return _mapper.Map<List<PlayerAwardDto>>(nominees);
+            var votes = await _context.Votes
+                .Where(v => v.AwardId == awardId)
+                .GroupBy(v => v.PlayerId)
+                .Select(g => new { PlayerId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(g => g.PlayerId, g => g.Count);
+
+            var topVote = votes.OrderByDescending(x => x.Value).FirstOrDefault();
+            var topPlayerId = topVote.Key;
+            var maxVotes = topVote.Value;
+
+            var results = nominations.Select(n => new PlayerAwardDto
+            {
+                PlayerId = n.PlayerId,
+                PlayerName = n.Player?.Name ?? "Unknown",
+                AwardId = n.AwardId,
+                AwardName = n.Award?.Title ?? "Unknown",
+                NominationDate = n.NominationDate,
+                VotesReceived = votes.ContainsKey(n.PlayerId) ? votes[n.PlayerId] : 0,
+                IsWinner = n.PlayerId == topPlayerId && maxVotes > 0
+            }).ToList();
+
+            return results;
         }
 
         public async Task<IEnumerable<PlayerAwardDto>> GetAwardWinnersAsync(int awardId)

@@ -20,5 +20,6 @@ namespace IPLAwardManagementSystem.Models
         // Navigation properties
         public ICollection<PlayerAward> PlayerAwards { get; set; } = new List<PlayerAward>();
         public ICollection<Vote> Votes { get; set; } = new List<Vote>();
+        public string? Title { get; internal set; }
     }
 }

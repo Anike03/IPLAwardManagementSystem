@@ -1,0 +1,69 @@
+﻿@model IEnumerable<IPLAwardManagementSystem.DTOs.PlayerAwardDto>
+@{
+    ViewData["Title"] = "Nominate Players";
+    var awardId = ViewBag.AwardId;
+    var awardName = ViewBag.AwardName as string ?? "Award";
+    var playerList = ViewBag.Players as SelectList;
+}
+
+<h2 class="mb-4">Nominate Players for <span class="text-primary">@awardName</span></h2>
+
+<form method="post" asp-action="Nominate">
+    <input type="hidden" name="awardId" value="@awardId" />
+    <div class="form-group">
+        <label for="playerId">Select Player</label>
+        <select name="playerId" asp-items="playerList" class="form-control" required>
+            <option value="">-- Select a Player --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Nominate</button>
+</form>
+
+<hr />
+
+<h4>Current Nominees</h4>
+@if (!Model.Any())
+{
+    <p class="text-muted">No nominees yet for this award.</p>
+}
+else
+{
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Player</th>
+                <th>Nomination Date</th>
+                <th>Votes Received</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var nominee in Model)
+            {
+                <tr>
+                    <td>@nominee.PlayerName</td>
+                    <td>@nominee.NominationDate.ToShortDateString()</td>
+                    <td>@nominee.VotesReceived</td>
+                    <td>
+                        @if (nominee.IsWinner)
+                        {
+                            <span class="badge bg-success">Winner</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Nominated</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="RemoveNomination" method="post" style="display:inline;">
+                            <input type="hidden" name="awardId" value="@awardId" />
+                            <input type="hidden" name="playerId" value="@nominee.PlayerId" />
+                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

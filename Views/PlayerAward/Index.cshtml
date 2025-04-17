@@ -1,32 +1,70 @@
 @model IEnumerable<IPLAwardManagementSystem.DTOs.PlayerAwardDto>
+
 @{
-    ViewData["Title"] = "Nominations";
+    ViewData["Title"] = "All Nominations";
 }
 
-<h2 class="mb-4">All Nominations</h2>
-<a asp-action="Create" class="btn btn-primary mb-3">Nominate Player</a>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Player</th>
-            <th>Award</th>
-            <th>Winner</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model)
+<h2 class="mb-4 text-uppercase fw-bold text-primary">All Nominations</h2>
+
+@if (!Model.Any())
+
 {
-    <tr>
-        <td>@item.PlayerName</td>
-        <td>@item.AwardName</td>
-        <td>@(item.IsWinner ? "Yes" : "No")</td>
-        <td>
-            <a asp-action="Details" asp-route-playerId="@item.PlayerId" asp-route-awardId="@item.AwardId">Details</a> |
-            <a asp-action="Edit" asp-route-playerId="@item.PlayerId" asp-route-awardId="@item.AwardId">Edit</a> |
-            <a asp-action="Delete" asp-route-playerId="@item.PlayerId" asp-route-awardId="@item.AwardId">Delete</a>
-        </td>
-    </tr>
+    <div class="alert alert-info">
+        No nominations have been made yet.
+    </div>
 }
-    </tbody>
-</table>
+
+else
+
+{
+    <table class="table table-hover table-bordered shadow-sm bg-white">
+        <thead class="table-dark text-white text-center">
+            <tr>
+                <th>#</th>
+                <th>Player</th>
+                <th>Award</th>
+                <th>Nomination Date</th>
+                <th>Votes Received</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            @foreach (var nomination in Model.Select((item, index) => new { Item = item, Index = index + 1 }))
+
+            {
+                <tr>
+                    <td>@nomination.Index</td>
+                    <td class="fw-semibold">@nomination.Item.PlayerName</td>
+                    <td>@nomination.Item.AwardName</td>
+                    <td>@nomination.Item.NominationDate.ToShortDateString()</td>
+                    <td>
+                        <span class="badge bg-info text-dark">@nomination.Item.VotesReceived</span>
+                    </td>
+                    <td>
+                        @if (nomination.Item.IsWinner)
+
+                        {
+                            <span class="badge bg-success"><i class="fas fa-crown me-1"></i> Winner</span>
+                        }
+
+                        else
+
+                        {
+                            <span class="badge bg-secondary">Nominated</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="playerId" value="@nomination.Item.PlayerId" />
+                            <input type="hidden" name="awardId" value="@nomination.Item.AwardId" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Remove this nomination?')">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
