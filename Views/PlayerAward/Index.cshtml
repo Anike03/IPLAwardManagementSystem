@@ -1,7 +1,23 @@
-@model IEnumerable<IPLAwardManagementSystem.DTOs.PlayerAwardDto>
+﻿@model IEnumerable<IPLAwardManagementSystem.DTOs.PlayerAwardDto>
 
 @{
     ViewData["Title"] = "All Nominations";
+
+
+
+    // 🧠 Group nominations by AwardId
+
+    var groupedByAward = Model
+
+        .GroupBy(n => n.AwardId)
+
+        .ToDictionary(
+
+            g => g.Key,
+
+            g => g.Max(n => n.VotesReceived) // max vote for each award
+
+        );
 }
 
 <h2 class="mb-4 text-uppercase fw-bold text-primary">All Nominations</h2>
@@ -33,16 +49,19 @@ else
             @foreach (var nomination in Model.Select((item, index) => new { Item = item, Index = index + 1 }))
 
             {
+
+                var maxVotesForAward = groupedByAward[nomination.Item.AwardId];
+
+                var isWinner = nomination.Item.VotesReceived == maxVotesForAward && maxVotesForAward > 0;
+
                 <tr>
                     <td>@nomination.Index</td>
                     <td class="fw-semibold">@nomination.Item.PlayerName</td>
-                    <td>@nomination.Item.AwardName</td>
+                    <td>@(string.IsNullOrEmpty(nomination.Item.AwardName) ? "MISSING" : nomination.Item.AwardName)</td>
                     <td>@nomination.Item.NominationDate.ToShortDateString()</td>
+                    <td><span class="badge bg-info text-dark">@nomination.Item.VotesReceived</span></td>
                     <td>
-                        <span class="badge bg-info text-dark">@nomination.Item.VotesReceived</span>
-                    </td>
-                    <td>
-                        @if (nomination.Item.IsWinner)
+                        @if (isWinner)
 
                         {
                             <span class="badge bg-success"><i class="fas fa-crown me-1"></i> Winner</span>

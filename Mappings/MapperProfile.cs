@@ -59,7 +59,7 @@ namespace IPLAwardManagementSystem.Mappings
             // PlayerAward — ✅ fully updated
             CreateMap<PlayerAward, PlayerAwardDto>()
                 .ForMember(dest => dest.PlayerName, opt => opt.MapFrom(src => src.Player.Name))
-                .ForMember(dest => dest.AwardName, opt => opt.MapFrom(src => src.Award.Title))
+                .ForMember(dest => dest.AwardName, opt => opt.MapFrom(src => src.Award.Name))
                 .ForMember(dest => dest.NominationDate, opt => opt.MapFrom(src => src.NominationDate))
                 .ForMember(dest => dest.VotesReceived, opt => opt.MapFrom(src => src.VotesReceived))
                 .ForMember(dest => dest.IsWinner, opt => opt.MapFrom(src => src.IsWinner));

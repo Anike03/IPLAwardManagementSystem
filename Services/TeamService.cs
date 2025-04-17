@@ -64,9 +64,15 @@ namespace IPLAwardManagementSystem.Services
             var team = await _context.Teams.FindAsync(id);
             if (team != null)
             {
-                _mapper.Map(dto, team);
+                // Don't touch team.TeamId
+                team.TeamName = dto.TeamName;
+                team.Coach = dto.Coach;
+                team.HomeCity = dto.HomeCity;
+                team.FoundingDate = dto.FoundingDate;
+
                 await _context.SaveChangesAsync();
             }
         }
+
     }
 }

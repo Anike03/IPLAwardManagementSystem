@@ -21,12 +21,14 @@ namespace IPLAwardManagementSystem.DTOs
 
     public class TeamUpdateDto
     {
-        public int TeamId { get; set; } // ✅ Add this line
+        public int TeamId { get; set; } // used only for view-binding
         public string? TeamName { get; set; }
         public string? Coach { get; set; }
         public string? HomeCity { get; set; }
         public DateTime FoundingDate { get; set; }
     }
+
+
 
     public class TeamListDto
     {

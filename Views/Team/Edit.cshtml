@@ -4,30 +4,41 @@
     ViewData["Title"] = "Edit Team";
 }
 
-<h2 class="mb-4">Edit Team</h2>
+<h2>Edit Team</h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="TeamId" />
-    <div class="mb-3">
-        <label asp-for="TeamName" class="form-label"></label>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="TeamId" /> 
+
+    <div class="form-group">
+        <label asp-for="TeamName" class="control-label"></label>
         <input asp-for="TeamName" class="form-control" />
         <span asp-validation-for="TeamName" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Coach" class="form-label"></label>
+
+    <div class="form-group">
+        <label asp-for="Coach" class="control-label"></label>
         <input asp-for="Coach" class="form-control" />
         <span asp-validation-for="Coach" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="HomeCity" class="form-label"></label>
+
+    <div class="form-group">
+        <label asp-for="HomeCity" class="control-label"></label>
         <input asp-for="HomeCity" class="form-control" />
         <span asp-validation-for="HomeCity" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="FoundingDate" class="form-label"></label>
+
+    <div class="form-group">
+        <label asp-for="FoundingDate" class="control-label"></label>
         <input asp-for="FoundingDate" class="form-control" type="date" />
         <span asp-validation-for="FoundingDate" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

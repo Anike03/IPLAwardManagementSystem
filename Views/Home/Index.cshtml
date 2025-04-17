@@ -6,7 +6,9 @@
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold">Welcome to IPL Award Management System</h1>
         <p class="lead text-muted">Manage players, matches, teams, awards, votes and more — all in one place.</p>
-        <a class="btn btn-primary btn-lg mt-3" href="/Teams">Get Started</a>
+        <a href="/swagger" class="btn btn-lg btn-warning fw-bold shadow mt-3">
+            <i class="fas fa-rocket me-2"></i> Get Started
+        </a>
     </div>
 
     <div class="row g-4">
@@ -15,7 +17,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Players</h5>
                     <p class="card-text">View and manage all players, their stats, and achievements.</p>
-                    <a href="/Players" class="btn btn-outline-primary btn-sm">Manage Players</a>
+                    <a asp-controller="Player" asp-action="Index" class="btn btn-outline-primary btn-sm">Manage Players</a>
                 </div>
             </div>
         </div>
@@ -25,7 +27,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Teams</h5>
                     <p class="card-text">Explore all IPL teams, coaches, and related players.</p>
-                    <a href="/Teams" class="btn btn-outline-primary btn-sm">View Teams</a>
+                    <a asp-controller="Team" asp-action="Index" class="btn btn-outline-primary btn-sm">View Teams</a>
                 </div>
             </div>
         </div>
@@ -35,7 +37,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Matches</h5>
                     <p class="card-text">Track upcoming and past matches, results and venues.</p>
-                    <a href="/Matches" class="btn btn-outline-primary btn-sm">Match Center</a>
+                    <a asp-controller="Match" asp-action="Index" class="btn btn-outline-primary btn-sm">Match Center</a>
                 </div>
             </div>
         </div>
@@ -45,7 +47,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Awards</h5>
                     <p class="card-text">Nominate players and declare winners for IPL awards.</p>
-                    <a href="/Awards" class="btn btn-outline-primary btn-sm">Manage Awards</a>
+                    <a asp-controller="Award" asp-action="Index" class="btn btn-outline-primary btn-sm">Manage Awards</a>
                 </div>
             </div>
         </div>
@@ -55,7 +57,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Voting</h5>
                     <p class="card-text">Let voters cast their vote for their favorite players.</p>
-                    <a href="/Votes" class="btn btn-outline-primary btn-sm">Voting Panel</a>
+                    <a asp-controller="Vote" asp-action="Index" class="btn btn-outline-primary btn-sm">Voting Panel</a>
                 </div>
             </div>
         </div>
@@ -65,7 +67,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Venues</h5>
                     <p class="card-text">Manage venues, their capacities and hosted teams.</p>
-                    <a href="/Venues" class="btn btn-outline-primary btn-sm">Manage Venues</a>
+                    <a asp-controller="Venue" asp-action="Index" class="btn btn-outline-primary btn-sm">Manage Venues</a>
                 </div>
             </div>
         </div>
