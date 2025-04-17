@@ -1,0 +1,20 @@
+@model IPLAwardManagementSystem.DTOs.PlayerAwardCreateDto
+@{
+    ViewData["Title"] = "Nominate Player";
+}
+<h2 class="mb-4">Nominate Player for Award</h2>
+<form asp-action="Create">
+    <div class="mb-3">
+        <label asp-for="PlayerId" class="form-label"></label>
+        <input asp-for="PlayerId" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="AwardId" class="form-label"></label>
+        <input asp-for="AwardId" class="form-control" />
+    </div>
+    <div class="form-check">
+        <input asp-for="IsWinner" class="form-check-input" />
+        <label asp-for="IsWinner" class="form-check-label"></label>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Save</button>
+</form>

@@ -1,0 +1,14 @@
+@model IPLAwardManagementSystem.DTOs.PlayerAwardDto
+@{
+    ViewData["Title"] = "Nomination Details";
+}
+<h2 class="mb-4">Nomination Details</h2>
+<dl class="row">
+    <dt class="col-sm-2">Player</dt>
+    <dd class="col-sm-10">@Model.PlayerName</dd>
+    <dt class="col-sm-2">Award</dt>
+    <dd class="col-sm-10">@Model.AwardName</dd>
+    <dt class="col-sm-2">Winner</dt>
+    <dd class="col-sm-10">@Model.IsWinner</dd>
+</dl>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

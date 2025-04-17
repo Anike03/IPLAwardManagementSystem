@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -102,6 +102,13 @@ namespace IPLAwardManagementSystem.Controllers
         {
             await _voteService.DeleteVoteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // ✅ Results Page: Show vote totals grouped by player and award
+        public async Task<IActionResult> Results()
+        {
+            var results = await _voteService.GetVoteResultsAsync();
+            return View(results);
         }
 
         private async Task LoadDropdownData()

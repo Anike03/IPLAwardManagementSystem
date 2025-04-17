@@ -22,6 +22,7 @@ namespace IPLAwardManagementSystem.Data
         public DbSet<VenueTeam> VenueTeams { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); // Important for Identity configuration

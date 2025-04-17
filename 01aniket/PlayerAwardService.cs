@@ -91,5 +91,26 @@ namespace IPLAwardManagementSystem.Services
         {
             return await _context.PlayerAwards.AnyAsync(pa => pa.PlayerId == playerId && pa.AwardId == awardId);
         }
+
+        // ? New: Winners List
+        public async Task<IEnumerable<PlayerAwardDto>> GetWinnersAsync()
+        {
+            var list = await _context.PlayerAwards
+                .Where(pa => pa.IsWinner)
+                .Include(pa => pa.Player)
+                .Include(pa => pa.Award)
+                .ToListAsync();
+            return _mapper.Map<List<PlayerAwardDto>>(list);
+        }
+
+        // ? New: Results (all nominations, grouped or counted)
+        public async Task<IEnumerable<PlayerAwardDto>> GetResultsAsync()
+        {
+            var results = await _context.PlayerAwards
+                .Include(pa => pa.Player)
+                .Include(pa => pa.Award)
+                .ToListAsync();
+            return _mapper.Map<List<PlayerAwardDto>>(results);
+        }
     }
 }

@@ -19,6 +19,24 @@ namespace IPLAwardManagementSystem.Controllers
             return View(list);
         }
 
+        public async Task<IActionResult> Nominations()
+        {
+            var nominations = await _service.GetAllAsync();
+            return View("Nominations", nominations);
+        }
+
+        public async Task<IActionResult> Winners()
+        {
+            var winners = await _service.GetWinnersAsync();
+            return View("Winners", winners);
+        }
+
+        public async Task<IActionResult> Results()
+        {
+            var results = await _service.GetResultsAsync();
+            return View("Results", results);
+        }
+
         public async Task<IActionResult> Details(int playerId, int awardId)
         {
             var item = await _service.GetByIdAsync(playerId, awardId);

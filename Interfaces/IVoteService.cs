@@ -9,5 +9,7 @@ namespace IPLAwardManagementSystem.Services
         Task<VoteDto> CreateVoteAsync(VoteCreateDto dto);
         Task UpdateVoteAsync(int id, VoteUpdateDto dto);
         Task DeleteVoteAsync(int id);
+        Task<IEnumerable<VoteResultDto>> GetVoteResultsAsync();
+
     }
 }

@@ -31,4 +31,18 @@
         public int VoterId { get; set; }
         public DateTime VoteDate { get; set; }
     }
+    // VoteResultDto.cs
+    public class VoteResultDto
+    {
+        public int PlayerId { get; set; }
+        public string PlayerName { get; set; } = string.Empty;
+
+        public int AwardId { get; set; }
+        public string AwardName { get; set; } = string.Empty;
+
+        public int TotalVotes { get; set; }
+        public string Status { get; set; } = "Nominated";
+    }
+
+
 }

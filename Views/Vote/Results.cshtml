@@ -1,0 +1,25 @@
+﻿@model IEnumerable<IPLAwardManagementSystem.DTOs.VoteResultDto>
+@{
+    ViewData["Title"] = "Voting Results";
+}
+<h2 class="mb-4">Voting Results</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Award</th>
+            <th>Total Votes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model)
+        {
+            <tr>
+                <td>@result.PlayerName</td>
+                <td>@result.AwardName</td>
+                <td>@result.TotalVotes</td>
+            </tr>
+        }
+    </tbody>
+</table>

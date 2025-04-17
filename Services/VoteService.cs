@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using IPLAwardManagementSystem.Data;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Models;
@@ -24,6 +24,7 @@ namespace IPLAwardManagementSystem.Services
                 .Include(v => v.Award)
                 .Include(v => v.Voter)
                 .ToListAsync();
+
             return _mapper.Map<IEnumerable<VoteDto>>(votes);
         }
 
@@ -66,6 +67,37 @@ namespace IPLAwardManagementSystem.Services
                 _context.Votes.Remove(vote);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        // ✅ Results with Winner/Nominated logic
+        public async Task<IEnumerable<VoteResultDto>> GetVoteResultsAsync()
+        {
+            var groupedVotes = await _context.Votes
+                .Include(v => v.Player)
+                .Include(v => v.Award)
+                .GroupBy(v => new { v.AwardId, v.PlayerId })
+                .Select(g => new VoteResultDto
+                {
+                    AwardId = g.Key.AwardId,
+                    PlayerId = g.Key.PlayerId,
+                    AwardName = g.First().Award != null ? g.First().Award.Name : "Unknown",
+                    PlayerName = g.First().Player != null ? g.First().Player.Name : "Unknown",
+                    TotalVotes = g.Count()
+                })
+                .ToListAsync();
+
+            // determine winners for each award
+            var winnersByAward = groupedVotes
+                .GroupBy(r => r.AwardId)
+                .Select(g => g.OrderByDescending(x => x.TotalVotes).First().PlayerId)
+                .ToHashSet();
+
+            foreach (var result in groupedVotes)
+            {
+                result.Status = winnersByAward.Contains(result.PlayerId) ? "Winner" : "Nominated";
+            }
+
+            return groupedVotes;
         }
     }
 }

@@ -1,0 +1,32 @@
+@model IEnumerable<IPLAwardManagementSystem.DTOs.PlayerAwardDto>
+@{
+    ViewData["Title"] = "Nominations";
+}
+
+<h2 class="mb-4">All Nominations</h2>
+<a asp-action="Create" class="btn btn-primary mb-3">Nominate Player</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Award</th>
+            <th>Winner</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.PlayerName</td>
+        <td>@item.AwardName</td>
+        <td>@(item.IsWinner ? "Yes" : "No")</td>
+        <td>
+            <a asp-action="Details" asp-route-playerId="@item.PlayerId" asp-route-awardId="@item.AwardId">Details</a> |
+            <a asp-action="Edit" asp-route-playerId="@item.PlayerId" asp-route-awardId="@item.AwardId">Edit</a> |
+            <a asp-action="Delete" asp-route-playerId="@item.PlayerId" asp-route-awardId="@item.AwardId">Delete</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

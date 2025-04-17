@@ -10,9 +10,11 @@ namespace IPLAwardManagementSystem.Services
         Task<bool> UpdateAsync(int playerId, int awardId, PlayerAwardUpdateDto dto);
         Task<bool> DeleteAsync(int playerId, int awardId);
 
-        // Query methods
         Task<IEnumerable<PlayerAwardDto>> GetAwardsByPlayerIdAsync(int playerId);
         Task<IEnumerable<PlayerAwardDto>> GetNominationsByAwardIdAsync(int awardId);
         Task<bool> IsPlayerNominatedAsync(int playerId, int awardId);
+
+        Task<IEnumerable<PlayerAwardDto>> GetWinnersAsync();
+        Task<IEnumerable<PlayerAwardDto>> GetResultsAsync();
     }
 }
