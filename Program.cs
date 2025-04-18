@@ -41,7 +41,6 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddScoped<IVoterService, VoterService>();
 builder.Services.AddScoped<IVoteService, VoteService>();
-builder.Services.AddScoped<IPlayerAwardService, PlayerAwardService>();
 builder.Services.AddScoped<IVenueTeamService, VenueTeamService>();
 
 // MVC and API Configuration

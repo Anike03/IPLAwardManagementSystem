@@ -5,7 +5,7 @@
 
 
 
-    // 🧠 Group nominations by AwardId
+    // Group nominations by AwardId to dynamically assign Winner status
 
     var groupedByAward = Model
 
@@ -15,7 +15,7 @@
 
             g => g.Key,
 
-            g => g.Max(n => n.VotesReceived) // max vote for each award
+            g => g.Max(n => n.VotesReceived)
 
         );
 }
@@ -50,14 +50,14 @@ else
 
             {
 
-                var maxVotesForAward = groupedByAward[nomination.Item.AwardId];
+                var maxVotes = groupedByAward[nomination.Item.AwardId];
 
-                var isWinner = nomination.Item.VotesReceived == maxVotesForAward && maxVotesForAward > 0;
+                var isWinner = nomination.Item.VotesReceived == maxVotes && maxVotes > 0;
 
                 <tr>
                     <td>@nomination.Index</td>
                     <td class="fw-semibold">@nomination.Item.PlayerName</td>
-                    <td>@(string.IsNullOrEmpty(nomination.Item.AwardName) ? "MISSING" : nomination.Item.AwardName)</td>
+                    <td>@nomination.Item.AwardName</td>
                     <td>@nomination.Item.NominationDate.ToShortDateString()</td>
                     <td><span class="badge bg-info text-dark">@nomination.Item.VotesReceived</span></td>
                     <td>

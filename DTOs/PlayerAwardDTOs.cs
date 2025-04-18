@@ -25,5 +25,6 @@ namespace IPLAwardManagementSystem.DTOs
         public bool IsWinner { get; set; }
         public DateTime NominationDate { get; set; }
         public int VotesReceived { get; set; }
+        public int Year { get; set; } 
     }
 }

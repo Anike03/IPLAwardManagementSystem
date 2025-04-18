@@ -23,7 +23,11 @@ namespace IPLAwardManagementSystem.Mappings
             CreateMap<Player, PlayerUpdateDto>().ReverseMap();
             CreateMap<Player, PlayerListDto>()
                 .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team.TeamName));
-            CreateMap<Player, PlayerDetailDto>().ReverseMap();
+
+            // ✅ Player details mapping including awards and team name
+            CreateMap<Player, PlayerDetailDto>()
+                .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team.TeamName))
+                .ForMember(dest => dest.Awards, opt => opt.MapFrom(src => src.PlayerAwards));
 
             // Match
             CreateMap<Match, MatchDto>()
@@ -56,13 +60,14 @@ namespace IPLAwardManagementSystem.Mappings
             CreateMap<Vote, VoteCreateDto>().ReverseMap();
             CreateMap<Vote, VoteUpdateDto>().ReverseMap();
 
-            // PlayerAward — ✅ fully updated
+            // ✅ PlayerAward mapping with Year from DateTime
             CreateMap<PlayerAward, PlayerAwardDto>()
                 .ForMember(dest => dest.PlayerName, opt => opt.MapFrom(src => src.Player.Name))
                 .ForMember(dest => dest.AwardName, opt => opt.MapFrom(src => src.Award.Name))
                 .ForMember(dest => dest.NominationDate, opt => opt.MapFrom(src => src.NominationDate))
                 .ForMember(dest => dest.VotesReceived, opt => opt.MapFrom(src => src.VotesReceived))
-                .ForMember(dest => dest.IsWinner, opt => opt.MapFrom(src => src.IsWinner));
+                .ForMember(dest => dest.IsWinner, opt => opt.MapFrom(src => src.IsWinner))
+                .ForMember(dest => dest.Year, opt => opt.MapFrom(src => src.Year.Year)); // ✅ Correctly extract int year
 
             CreateMap<PlayerAwardDto, PlayerAward>()
                 .ForMember(dest => dest.Player, opt => opt.Ignore())

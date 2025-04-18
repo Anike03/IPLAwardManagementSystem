@@ -19,5 +19,7 @@ namespace IPLAwardManagementSystem.Services
         Task<IEnumerable<PlayerAwardDto>> GetAwardWinnersAsync(int awardId);
         Task<int> GetVoteCountAsync(int awardId, int playerId);
         Task<bool> IsPlayerNominatedAsync(int awardId, int playerId);
+
+        Task<IEnumerable<PlayerAwardDto>> GetAllAwardNomineesAsync();
     }
 }

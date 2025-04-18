@@ -161,5 +161,16 @@ namespace IPLAwardManagementSystem.Services
         {
             return await _context.PlayerAwards.AnyAsync(pa => pa.AwardId == awardId && pa.PlayerId == playerId);
         }
+
+        public async Task<IEnumerable<PlayerAwardDto>> GetAllAwardNomineesAsync()
+        {
+            var nominations = await _context.PlayerAwards
+                .Include(pa => pa.Player)
+                .Include(pa => pa.Award)
+                .ToListAsync();
+
+            return _mapper.Map<List<PlayerAwardDto>>(nominations);
+        }
+
     }
 }
