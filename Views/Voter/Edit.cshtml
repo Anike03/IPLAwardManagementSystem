@@ -1,25 +1,19 @@
-@model IPLAwardManagementSystem.DTOs.VoterUpdateDto
-@{
-    ViewData["Title"] = "Edit Voter";
-}
-
-<h2>Edit Voter</h2>
+﻿@model VoterUpdateDto
 
 <form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
+    <input type="hidden" asp-for="VoterId" />
+
+    <div class="form-group">
+        <label>Name</label>
         <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
+    <div class="form-group">
+        <label>Email</label>
         <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Role" class="form-label"></label>
-        <select asp-for="Role" class="form-select">
+    <div class="form-group">
+        <label>Role</label>
+        <select asp-for="Role" class="form-control">
             <option value="">-- Select Role --</option>
             <option value="President">President</option>
             <option value="Hon.Secretary">Hon.Secretary</option>
@@ -28,8 +22,21 @@
             <option value="User">User</option>
             <option value="Guest">Guest</option>
         </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <div class="form-group">
+        <label>Verified</label>
+        <select asp-for="IsVerified" class="form-control">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Active</label>
+        <select asp-for="IsActive" class="form-control">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>

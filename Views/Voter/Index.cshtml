@@ -1,34 +1,33 @@
-@model IEnumerable<IPLAwardManagementSystem.DTOs.VoterDto>
-@{
-    ViewData["Title"] = "Voter List";
-}
+@model IEnumerable<VoterDto>
 
-<h2>Voter List</h2>
+<h2>Voters</h2>
+<a asp-action="Create" class="btn btn-success">Add New Voter</a>
 
-<p>
-    <a asp-action="Create" class="btn btn-success">Add New Voter</a>
-</p>
-
-<table class="table table-striped">
+<table class="table table-bordered mt-3">
     <thead>
         <tr>
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Verified</th>
+            <th>Active</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var voter in Model)
+
         {
             <tr>
                 <td>@voter.Name</td>
                 <td>@voter.Email</td>
                 <td>@voter.Role</td>
+                <td>@(voter.IsVerified ? "Yes" : "No")</td>
+                <td>@(voter.IsActive ? "Yes" : "No")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@voter.Id" class="btn btn-sm btn-primary">Edit</a>
-                    <a asp-action="Details" asp-route-id="@voter.Id" class="btn btn-sm btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@voter.Id" class="btn btn-sm btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@voter.VoterId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@voter.VoterId" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@voter.VoterId" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }

@@ -48,9 +48,12 @@ namespace IPLAwardManagementSystem.Mappings
             CreateMap<Award, AwardUpdateDto>().ReverseMap();
 
             // Voter
-            CreateMap<Voter, VoterDto>().ReverseMap();
+            CreateMap<Voter, VoterDto>();
+            CreateMap<VoterDto, Voter>();
+
             CreateMap<Voter, VoterCreateDto>().ReverseMap();
             CreateMap<Voter, VoterUpdateDto>().ReverseMap();
+
 
             // Vote
             CreateMap<Vote, VoteDto>()

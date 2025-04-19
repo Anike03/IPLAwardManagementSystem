@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using IPLAwardManagementSystem.DTOs;
 using IPLAwardManagementSystem.Services;
 
@@ -50,10 +50,12 @@ namespace IPLAwardManagementSystem.Controllers
 
             var editDto = new VoterUpdateDto
             {
-                Id = voter.Id,
+                VoterId = voter.VoterId ?? 0, // ✅ Handle nullable
                 Name = voter.Name,
                 Email = voter.Email,
-                Role = voter.Role
+                Role = voter.Role,
+                IsVerified = voter.IsVerified,
+                IsActive = voter.IsActive
             };
 
             return View(editDto);
